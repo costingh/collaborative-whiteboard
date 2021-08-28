@@ -3,6 +3,7 @@ import ColorPickerBar from './ColorPickerBar';
 import LeftBar from './LeftBar';
 import OnlineUsers from './OnlineUsers';
 import BottomRightBar from './BottomRightBar';
+import MoreActionsBar from './MoreActionsBar';
 
 function Canvas() {
     return (
@@ -11,6 +12,7 @@ function Canvas() {
             <LeftBar/>
             <OnlineUsers/>
             <BottomRightBar/>
+            {/* <MoreActionsBar/> */}
             <canvas 
             id="canvas" 
         >Your browser does not support HTML5 canvas</canvas>
