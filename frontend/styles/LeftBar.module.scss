@@ -1,0 +1,19 @@
+.leftbar {
+    position: absolute;
+    left: 50px;
+    bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    div {
+        border-radius: 7px;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-right: 15px;
+    }
+}
