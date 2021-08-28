@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef} from 'react'
 // components
 import LeftBar from './LeftBar';
 import OnlineUsers from './OnlineUsers';
+import FileUploader from './FileUploader';
+import ShowInfoPanel from './ShowInfoPanel';
 import ColorPickerBar from './ColorPickerBar';
 import BottomRightBar from './BottomRightBar';
 import MoreActionsBar from './MoreActionsBar';
@@ -317,6 +319,13 @@ function Canvas() {
             <ColorPickerBar/>
             <LeftBar/>
             <OnlineUsers/>
+            {showFileUploader 
+                && <FileUploader 
+                    setShowFileUploader={setShowFileUploader}
+                    setTextReadFromFile={setTextReadFromFile}    
+                />
+            }
+            {showInfoPanel && <ShowInfoPanel setShowInfoPanel={setShowInfoPanel}/>}
             <BottomRightBar/>
             {/* <MoreActionsBar/> */}
             <canvas 

@@ -1,0 +1,87 @@
+.infoPanel {
+    position: absolute;
+    z-index: 999999;
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .inner {
+        min-width: 200px;
+        width: 500px;
+        background: #fff;
+        border-radius: 10px;
+
+        .top {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            padding: 0px 20px;
+        }
+
+        .paragraph {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h1 {
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            .heading {
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                text-align: center;
+                flex: .3;
+                    text-align: center;
+            }
+
+            .close {
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all .3s ease;
+                &:hover {
+                    color: #222;
+                }
+            }
+        }
+
+        .bottom {
+            width: 100%;
+            display: flex;
+            border-top: 1px solid #ccc;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            
+            .closeBtn {
+                padding: 8px 15px;
+                font-size: 15px;
+                color: #333;
+                border: 1px solid #333;
+                border-radius: 7px;
+                transition: all .3s ease;
+                cursor: pointer;
+                &:hover {
+                    color: #fff;
+                    background: #333;
+                }
+            }
+        }
+    }
+
+    
+}

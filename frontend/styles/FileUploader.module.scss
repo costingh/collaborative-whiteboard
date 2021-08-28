@@ -1,0 +1,31 @@
+.fileUploader {
+    position: absolute;
+    z-index: 999999;
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .icon {
+        color: #333;
+    font-size:15px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all .3s ease;
+    &:hover {
+        color: rgba(255,255,255,0.8);
+        background: #333;
+    }
+    }
+}
