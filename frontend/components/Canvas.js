@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext, useCallback} from 'reac
 import ColorPickerBar from './ColorPickerBar';
 import LeftBar from './LeftBar';
 import OnlineUsers from './OnlineUsers';
+import BottomRightBar from './BottomRightBar';
 
 function Canvas() {
     return (
@@ -9,6 +10,7 @@ function Canvas() {
             <ColorPickerBar/>
             <LeftBar/>
             <OnlineUsers/>
+            <BottomRightBar/>
             <canvas 
             id="canvas" 
         >Your browser does not support HTML5 canvas</canvas>

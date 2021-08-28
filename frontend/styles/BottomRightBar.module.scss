@@ -1,0 +1,40 @@
+.bottomRightBar {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    display: flex;
+    align-items: space-between;
+    justify-content: center;
+
+    .toggleTheme {
+        border-radius: 7px;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .undo {
+        border-radius: 7px;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        cursor: pointer;
+    }
+
+    .scale {
+        border-radius: 7px;
+        padding: 0px 10px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #222;
+    }
+}
