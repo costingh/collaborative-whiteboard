@@ -1,0 +1,15 @@
+.selectThicknessSlider {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .text {
+        padding: 0;
+        margin: 15px 0px;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: .4px;
+    }
+}

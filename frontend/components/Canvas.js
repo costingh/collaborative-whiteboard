@@ -9,6 +9,8 @@ import BottomRightBar from './BottomRightBar';
 import MoreActionsBar from './MoreActionsBar';
 // theme
 import { ThemeContext } from '../context/ThemeContext';
+// save functionality
+import { saveAs } from 'file-saver';
 
 function Canvas() {
     // load theme
@@ -316,8 +318,14 @@ function Canvas() {
             ref={canvasContainerRef}
             style={{position: 'relative', zIndex: '1', width: '100vw', height: '100vh'}}
         >
-            <ColorPickerBar/>
-            <LeftBar/>
+            <ColorPickerBar 
+                setStrokeStyle={setStrokeStyle}
+            />
+            <LeftBar 
+                save={save} 
+                disabled={disabled}
+                importFile={importFile}
+            />
             <OnlineUsers/>
             {showFileUploader 
                 && <FileUploader 
@@ -326,8 +334,17 @@ function Canvas() {
                 />
             }
             {showInfoPanel && <ShowInfoPanel setShowInfoPanel={setShowInfoPanel}/>}
-            <BottomRightBar/>
-            {/* <MoreActionsBar/> */}
+            <BottomRightBar 
+                scale={scale} 
+                undo={undo} 
+                disabled={disabled}
+            />
+            <MoreActionsBar 
+                lineWidth={lineWidth} 
+                setLineWidth={setLineWidth} 
+                setInstrument={setInstrument} 
+                instrument={instrument}
+            />
             <canvas 
                 id="canvas" 
                 ref={canvasRef}

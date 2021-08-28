@@ -1,0 +1,22 @@
+.selectInstrument {
+    width: 100%;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .instrument {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 5px;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+        &:hover {
+            background: #bbb !important;
+        }
+    }
+}
