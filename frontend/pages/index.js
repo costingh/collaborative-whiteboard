@@ -4,10 +4,13 @@ import Canvas from '../components/Canvas'
 import {ThemeProvider} from "../context/ThemeContext"
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs';
+import randomString from 'random-string'
 
 const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 export default function Home() {  
+  const [roomId, setRoomId] = useState(randomString({length: 15}));
+
   const sock = new SockJS(SOCKET_URL);
   const stompClient = Stomp.over(sock);
 
@@ -15,17 +18,21 @@ export default function Home() {
     console.log('open');
   }
 
-  stompClient.connect({}, function (frame) {
+  stompClient.connect({}, frame => {
      /* console.log('Connected: ' + frame); */
-     stompClient.subscribe('/topic/message', coordinates => {
+     stompClient.subscribe(`/topic/${roomId}`, coordinates => {
        console.log(coordinates);
        
      });
   });
 
   const sendMessage = (message) => {
-    stompClient.send('/topic/message', {}, message);
+    stompClient.send(`/send/${roomId}`, {}, message);
   }
+
+  /* useEffect(() => {
+    console.log(roomId)
+  }, [roomId]) */
 
   return (
     <Layout>
