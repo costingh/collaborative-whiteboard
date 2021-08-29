@@ -1,29 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from '../components/layout'
 import Canvas from '../components/Canvas'
 import {ThemeProvider} from "../context/ThemeContext"
-import SocketConfig from '../components/SocketConfig'
+import SockJS from 'sockjs-client'
+import Stomp from 'stompjs';
 
-export default function Home() {
-  const [message, setMessage] = useState('You server message here.');
-  
-  let onConnected = () => {
-    console.log("Connected!!")
+const SOCKET_URL = 'http://localhost:8080/ws-message';
+
+export default function Home() {  
+  const sock = new SockJS(SOCKET_URL);
+  const stompClient = Stomp.over(sock);
+
+  sock.onopen = function() {
+    console.log('open');
   }
 
-  let onMessageReceived = (msg) => {
-    setMessage(msg.message);
+  stompClient.connect({}, function (frame) {
+     /* console.log('Connected: ' + frame); */
+     stompClient.subscribe('/topic/message', coordinates => {
+       console.log(coordinates);
+       
+     });
+  });
+
+  const sendMessage = (message) => {
+    stompClient.send('/topic/message', {}, message);
   }
 
   return (
     <Layout>
       <ThemeProvider>
-        <SocketConfig
-          onConnected={onConnected}
-          onMessageReceived={onMessageReceived}
-        />
         <Canvas
-          message={message}
+          sendMessage={sendMessage}
         />
       </ThemeProvider>
     </Layout>

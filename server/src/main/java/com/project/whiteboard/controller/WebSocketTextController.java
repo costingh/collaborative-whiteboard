@@ -4,6 +4,7 @@ import com.project.whiteboard.model.TextMessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -20,20 +21,23 @@ public class WebSocketTextController {
     @Autowired
     SimpMessagingTemplate template;
 
-    @PostMapping("/send/room1")
-    public ResponseEntity<Void> sendMessage(@RequestBody TextMessageDTO textMessageDTO) {
+    @MessageMapping("/send/{roomId}")
+    @SendTo("/topic/message")
+    public ResponseEntity<Void> sendMessage(@RequestBody TextMessageDTO textMessageDTO, @DestinationVariable String roomId) {
         template.convertAndSend("/topic/message", textMessageDTO);
+        System.out.println(roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @MessageMapping("/sendMessage")
-    public void receiveMessage(@Payload TextMessageDTO textMessageDTO) {
-        // receive message from client
-    }
-
-
-    @SendTo("/topic/message")
-    public TextMessageDTO broadcastMessage(@Payload TextMessageDTO textMessageDTO) {
-        return textMessageDTO;
-    }
+//    @MessageMapping("/send")
+//    public void receiveMessage(@Payload TextMessageDTO textMessageDTO) {
+//        // receive message from client
+//        System.out.println(textMessageDTO.getMessage());
+//    }
+//
+//
+//    @SendTo("/topic/message")
+//    public TextMessageDTO broadcastMessage(@Payload TextMessageDTO textMessageDTO) {
+//        return textMessageDTO;
+//    }
 }

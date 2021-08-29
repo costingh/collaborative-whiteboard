@@ -12,12 +12,9 @@ import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
 // utils
-import { sendMessage } from '../utils/utils'
+/* import { sendMessage } from '../utils/utils' */
 
-function Canvas({message}) {
-    useEffect(() => {
-        console.log('Msg: ' + message);
-    }, [message])
+function Canvas({sendMessage}) {
     
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
