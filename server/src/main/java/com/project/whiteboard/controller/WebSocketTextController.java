@@ -22,10 +22,9 @@ public class WebSocketTextController {
     SimpMessagingTemplate template;
 
     @MessageMapping("/send/{roomId}")
-//    @SendTo("/topic/message")
-    public ResponseEntity<Void> sendMessage(@RequestBody TextMessageDTO textMessageDTO, @DestinationVariable String roomId) {
-        template.convertAndSend("/topic/roomId", textMessageDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @SendTo("/topic/{roomId}")
+    public TextMessageDTO sendMessage(@RequestBody TextMessageDTO textMessageDTO) {
+        return textMessageDTO;
     }
 
 //    @MessageMapping("/send")

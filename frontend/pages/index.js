@@ -10,7 +10,6 @@ const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 export default function Home() {  
   const [roomId, setRoomId] = useState(randomString({length: 15}));
-
   const sock = new SockJS(SOCKET_URL);
   const stompClient = Stomp.over(sock);
 
@@ -27,7 +26,7 @@ export default function Home() {
   });
 
   const sendMessage = (message) => {
-    stompClient.send(`/send/${roomId}`, {}, message);
+    stompClient.send(`/app/send/${roomId}`, {}, JSON.stringify(message));
   }
 
   /* useEffect(() => {
@@ -39,6 +38,7 @@ export default function Home() {
       <ThemeProvider>
         <Canvas
           sendMessage={sendMessage}
+          setRoomId={setRoomId}
         />
       </ThemeProvider>
     </Layout>

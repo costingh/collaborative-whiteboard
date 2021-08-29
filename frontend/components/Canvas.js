@@ -14,7 +14,7 @@ import { saveAs } from 'file-saver';
 // utils
 /* import { sendMessage } from '../utils/utils' */
 
-function Canvas({sendMessage}) {
+function Canvas({sendMessage, setRoomId}) {
     
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
@@ -364,6 +364,7 @@ function Canvas({sendMessage}) {
                 scale={scale} 
                 undo={undo} 
                 disabled={disabled}
+                setRoomId={setRoomId}
             />
             <MoreActionsBar 
                 lineWidth={lineWidth} 
