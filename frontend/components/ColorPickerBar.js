@@ -18,8 +18,9 @@ function ColorPickerBar({setStrokeStyle}) {
 
     return (
         <div className={styles.colorPickerBarscss}>
-            {colorList.map(color => 
+            {colorList.map((color, index) => 
                 <div 
+                    key={index}
                     style={{background: `${color}`}}
                     onClick={() => changeStrokeStyle(color)}
                 />)}

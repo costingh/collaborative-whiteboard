@@ -11,8 +11,14 @@ import MoreActionsBar from './MoreActionsBar';
 import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
+// utils
+import { sendMessage } from '../utils/utils'
 
-function Canvas() {
+function Canvas({message}) {
+    useEffect(() => {
+        console.log('Msg: ' + message);
+    }, [message])
+    
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -223,6 +229,29 @@ function Canvas() {
         context.lineWidth = lineWidth;
         context.stroke();
     }
+
+    useEffect(() => {
+        if(leftMouseDown) return; 
+        if(drawingHistory.length === 1 || drawingHistory.length === 0) return;
+
+        const startCoordinates = {
+            x: drawingHistory[drawingHistory.length-2].x,
+            y: drawingHistory[drawingHistory.length-2].y,
+        };
+
+        const endCoordinates = {
+            x: drawingHistory[drawingHistory.length-1].x,
+            y: drawingHistory[drawingHistory.length-1].y,
+        };
+
+        // broadcast coordinates of the latest drawing in the current room
+        sendMessage(
+            startCoordinates.x + ' ' + 
+            startCoordinates.y + ' ' + 
+            endCoordinates.x + ' ' + 
+            endCoordinates.y
+        );
+    }, [drawingHistory])
 
     const undo = () => {    
         if(disabled) return;    
