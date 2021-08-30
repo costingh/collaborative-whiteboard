@@ -26,6 +26,35 @@
             padding: 0px 20px;
         }
 
+        .enterId {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .input {
+                border: none;
+                /* border-bottom: 1px solid #ddd; */
+                /* width: 50%; */
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                outline: none;
+                height: 30px;
+                line-height: 30px;
+                padding: 5px;
+                flex: .5;
+            }
+
+            .heading {
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                text-align: center;
+                flex: .5;
+            }
+        }
+
         .paragraph {
             width: 100%;
             display: flex;

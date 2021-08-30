@@ -20,6 +20,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId}) {
 
     const changeRoom = () => {
         setRoomId(roomIdRef.current.value);
+        setShowJoinRoomPanel(false);
     }
 
     return (
@@ -34,7 +35,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId}) {
                             </div>
                         </div>
                         <div className={infoPanelStyles.middle}>
-                            <div className={infoPanelStyles.paragraph}>
+                            <div className={infoPanelStyles.enterId}>
                                 <h1 className={infoPanelStyles.heading}>Enter ID:</h1>
                                 <input className={infoPanelStyles.input} placeholder="fkjsldwkwqrn" ref={roomIdRef}/>
                                 {/* <p className={infoPanelStyles.details}>room id</p> */}
