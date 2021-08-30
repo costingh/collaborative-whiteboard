@@ -1,5 +1,6 @@
 package com.project.whiteboard.controller;
 
+import com.project.whiteboard.model.Coordinates;
 import com.project.whiteboard.model.TextMessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,21 +22,16 @@ public class WebSocketTextController {
     @Autowired
     SimpMessagingTemplate template;
 
-    @MessageMapping("/send/{roomId}")
-    @SendTo("/topic/{roomId}")
-    public TextMessageDTO sendMessage(@RequestBody TextMessageDTO textMessageDTO) {
-        return textMessageDTO;
-    }
-
-//    @MessageMapping("/send")
-//    public void receiveMessage(@Payload TextMessageDTO textMessageDTO) {
-//        // receive message from client
-//        System.out.println(textMessageDTO.getMessage());
-//    }
-//
-//
-//    @SendTo("/topic/message")
-//    public TextMessageDTO broadcastMessage(@Payload TextMessageDTO textMessageDTO) {
+//    @MessageMapping("/send/{roomId}")
+//    @SendTo("/topic/{roomId}")
+//    public TextMessageDTO sendMessage(@RequestBody TextMessageDTO textMessageDTO) {
 //        return textMessageDTO;
 //    }
+
+    @MessageMapping("/send/{roomId}")
+    @SendTo("/topic/{roomId}")
+    public Coordinates sendCoordinates(@Payload Coordinates coordinates) {
+        return coordinates;
+    }
+
 }

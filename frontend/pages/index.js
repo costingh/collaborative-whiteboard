@@ -14,13 +14,14 @@ export default function Home() {
   const stompClient = Stomp.over(sock);
 
   sock.onopen = function() {
-    console.log('open');
+    /* console.log('########################### open'); */
   }
 
   stompClient.connect({}, frame => {
      /* console.log('Connected: ' + frame); */
      stompClient.subscribe(`/topic/${roomId}`, coordinates => {
-       console.log(coordinates);
+       const coordinatesObj = JSON.parse(coordinates.body);
+       console.log(coordinatesObj.startX)
        
      });
   });

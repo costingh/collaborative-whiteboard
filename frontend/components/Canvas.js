@@ -11,8 +11,6 @@ import MoreActionsBar from './MoreActionsBar';
 import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
-// utils
-/* import { sendMessage } from '../utils/utils' */
 
 function Canvas({sendMessage, setRoomId}) {
     
@@ -242,12 +240,19 @@ function Canvas({sendMessage, setRoomId}) {
         };
 
         // broadcast coordinates of the latest drawing in the current room
-        sendMessage(
+        sendMessage({
+            actionType: 'drawing',
+            startX: startCoordinates.x,
+            startY: startCoordinates.y,
+            finishX: endCoordinates.x,
+            finishY: endCoordinates.y
+        });
+        /* sendMessage(
             startCoordinates.x + ' ' + 
             startCoordinates.y + ' ' + 
             endCoordinates.x + ' ' + 
             endCoordinates.y
-        );
+        ); */
     }, [drawingHistory])
 
     const undo = () => {    
