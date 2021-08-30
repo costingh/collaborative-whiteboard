@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import styles from '../styles/BottomRightBar.module.scss'
 import infoPanelStyles from '../styles/ShowInfoPanel.module.scss'
 import { ThemeContext } from '../context/ThemeContext'
+import CustomizedSnackbar from './CustomizedSnackbar';
 
 function BottomRightBar({scale, undo, disabled, setRoomId}) {
     const { theme, toggle, dark } = React.useContext(ThemeContext);
@@ -9,6 +10,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId}) {
     const [color, setColor] = useState('#222');
     const [showJoinRoomPanel, setShowJoinRoomPanel] = useState(false);
     const roomIdRef = useRef(null);
+    const [showSnackbar, setShowSnackbar] = useState(false);
 
     useEffect(() => {
         if(!theme.secondaryColor) return;
@@ -21,6 +23,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId}) {
     const changeRoom = () => {
         setRoomId(roomIdRef.current.value);
         setShowJoinRoomPanel(false);
+        setShowSnackbar(true);
     }
 
     return (
@@ -53,6 +56,8 @@ function BottomRightBar({scale, undo, disabled, setRoomId}) {
                 <div className={styles.undo} onClick={undo} style={{background: `${disabled ? '#222' : backgroundColor}`}}>↺</div>
                 <div className={styles.scale} style={{background: `${backgroundColor}`, color: `${color}`}}>Scale: {scale.toFixed(1)}</div> 
             </div>
+
+            <CustomizedSnackbar open={showSnackbar} setShowSnackbar={setShowSnackbar}/>
         </>
     )
 }
