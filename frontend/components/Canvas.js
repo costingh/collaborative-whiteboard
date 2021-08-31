@@ -12,8 +12,7 @@ import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
 
-function Canvas({sendMessage, setRoomId}) {
-    
+function Canvas({sendMessage, setRoomId, incomingDrawings}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -23,6 +22,7 @@ function Canvas({sendMessage, setRoomId}) {
     const [textReadFromFile, setTextReadFromFile] = useState('');
     const [canvasUploaded, setCanvasUploaded] = useState(false);
     const [showInfoPanel, setShowInfoPanel] = useState(true);
+    const [sentLastMessage, setSentLastMessage] = useState(false);
 
     const canvasContainerRef = useRef();
     const canvasRef = useRef();
@@ -225,6 +225,7 @@ function Canvas({sendMessage, setRoomId}) {
         context.stroke();
     }
 
+    // send coordinates of the last drawing (e.g. Drawing a straight line will trigger this useEffect once, therefore all the line coordinates will be sent to the server   )
     useEffect(() => {
         if(leftMouseDown) return; 
         if(drawingHistory.length === 1 || drawingHistory.length === 0) return;
@@ -239,21 +240,51 @@ function Canvas({sendMessage, setRoomId}) {
             y: drawingHistory[drawingHistory.length-1].y,
         };
 
+        let firstIndex = -1;
+        let lastIndex = -1;
+
+        for(let i=0; i < drawings.length; i++) {
+            if(
+                drawings[i].x1 === startCoordinates.x && 
+                drawings[i].y1 === startCoordinates.y) {
+                firstIndex = i;
+            }
+
+            if(
+                drawings[i].x1 === endCoordinates.x && 
+                drawings[i].y1 === endCoordinates.y) {
+                lastIndex = i;
+            }
+        }
+
+        // all the coordinates of the last draw
+        const lastDraw = [];
+
+        for(let i=0; i<drawings.length; i++) 
+            if(firstIndex >= 0 && lastIndex >= 0) 
+                if(i < lastIndex || i > firstIndex) 
+                    lastDraw.push(drawings[i]); 
+            
         // broadcast coordinates of the latest drawing in the current room
-        sendMessage({
-            actionType: 'drawing',
-            startX: startCoordinates.x,
-            startY: startCoordinates.y,
-            finishX: endCoordinates.x,
-            finishY: endCoordinates.y
-        });
-        /* sendMessage(
-            startCoordinates.x + ' ' + 
-            startCoordinates.y + ' ' + 
-            endCoordinates.x + ' ' + 
-            endCoordinates.y
-        ); */
+        sendMessage(lastDraw)
+        setSentLastMessage(true)
     }, [drawingHistory])
+
+    // every time a new drawing comes from server, draw it only if it wasn't sent by the same client that receives it
+    useEffect(() => {
+        if(sentLastMessage) {
+            // If this client sent the last drawing coordinates to server, do not redraw them
+            setSentLastMessage(false)
+        } else {
+            // If this client hasn't sent last drawing coordinates to server, draw the received coordinates
+            if(incomingDrawings.length) {
+                for (let i = 0; i < incomingDrawings.length; i++) {
+                    const line = incomingDrawings[i];
+                    drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color);
+                }
+            } 
+        }
+    }, [incomingDrawings])
 
     const undo = () => {    
         if(disabled) return;    
