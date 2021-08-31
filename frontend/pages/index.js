@@ -44,11 +44,6 @@ export default function Home() {
     stomp.current.send(`/app/send/${roomId}`, {}, JSON.stringify(message));
   }
 
-  const draw = [
-    {
-      "x0":539,"y0":264,"x1":539,"y1":264,"color":"#fff"
-    }
-  ]
 
   return (
     <Layout>
@@ -57,6 +52,7 @@ export default function Home() {
           sendMessage={sendMessage}
           setRoomId={setRoomId}
           incomingDrawings={incomingDrawings}
+          roomId={roomId}
         />
       </ThemeProvider>
     </Layout>

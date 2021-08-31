@@ -3,8 +3,9 @@ import styles from '../styles/BottomRightBar.module.scss'
 import infoPanelStyles from '../styles/ShowInfoPanel.module.scss'
 import { ThemeContext } from '../context/ThemeContext'
 import CustomizedSnackbar from './CustomizedSnackbar';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-function BottomRightBar({scale, undo, disabled, setRoomId}) {
+function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     const { theme, toggle, dark } = React.useContext(ThemeContext);
     const [backgroundColor, setBackgroundColor] = useState('#E2E6EA');
     const [color, setColor] = useState('#222');
@@ -51,6 +52,11 @@ function BottomRightBar({scale, undo, disabled, setRoomId}) {
                 </div>
             }
             <div className={styles.bottomRightBar}> 
+                <CopyToClipboard
+                    text={roomId}
+                >
+                    <div className={styles.toggleTheme} style={{background: `${backgroundColor}`, color: `${color}`}}>🔗</div>
+                </CopyToClipboard>
                 <div className={styles.toggleTheme} onClick={() => setShowJoinRoomPanel(!showJoinRoomPanel)} style={{background: `${backgroundColor}`, color: `${color}`}}>🚪</div>
                 <div className={styles.toggleTheme} onClick={toggle} style={{background: `${backgroundColor}`}}>💡</div>
                 <div className={styles.undo} onClick={undo} style={{background: `${disabled ? '#222' : backgroundColor}`}}>↺</div>

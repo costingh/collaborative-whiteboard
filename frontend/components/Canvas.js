@@ -12,7 +12,7 @@ import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
 
-function Canvas({sendMessage, setRoomId, incomingDrawings}) {
+function Canvas({sendMessage, setRoomId, incomingDrawings, roomId}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -401,6 +401,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings}) {
                 undo={undo} 
                 disabled={disabled}
                 setRoomId={setRoomId}
+                roomId={roomId}
             />
             <MoreActionsBar 
                 lineWidth={lineWidth} 
