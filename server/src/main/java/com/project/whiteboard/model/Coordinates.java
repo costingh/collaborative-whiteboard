@@ -1,57 +1,57 @@
 package com.project.whiteboard.model;
 
 public class Coordinates {
-    private String actionType;
-    private String startX;
-    private String startY;
-    private String finishX;
-    private String finishY;
+    private Long x0;
+    private Long y0;
+    private Long x1;
+    private Long y1;
+    private String color;
 
-    public Coordinates(String actionType, String startX, String startY, String finishX, String finishY) {
-        this.actionType = actionType;
-        this.startX = startX;
-        this.startY = startY;
-        this.finishX = finishX;
-        this.finishY = finishY;
+    public Coordinates(Long x0, Long y0, Long x1, Long y1, String color) {
+        this.x0 = x0;
+        this.y0 = y0;
+        this.x1 = x1;
+        this.y1 = y1;
+        this.color = color;
     }
 
-    public String getActionType() {
-        return actionType;
+    public Long getX0() {
+        return x0;
     }
 
-    public void setActionType(String actionType) {
-        this.actionType = actionType;
+    public void setX0(Long x0) {
+        this.x0 = x0;
     }
 
-    public String getStartX() {
-        return startX;
+    public Long getY0() {
+        return y0;
     }
 
-    public void setStartX(String startX) {
-        this.startX = startX;
+    public void setY0(Long y0) {
+        this.y0 = y0;
     }
 
-    public String getStartY() {
-        return startY;
+    public Long getX1() {
+        return x1;
     }
 
-    public void setStartY(String startY) {
-        this.startY = startY;
+    public void setX1(Long x1) {
+        this.x1 = x1;
     }
 
-    public String getFinishX() {
-        return finishX;
+    public Long getY1() {
+        return y1;
     }
 
-    public void setFinishX(String finishX) {
-        this.finishX = finishX;
+    public void setY1(Long y1) {
+        this.y1 = y1;
     }
 
-    public String getFinishY() {
-        return finishY;
+    public String getColor() {
+        return color;
     }
 
-    public void setFinishY(String finishY) {
-        this.finishY = finishY;
+    public void setColor(String color) {
+        this.color = color;
     }
 }
