@@ -4,9 +4,10 @@ import infoPanelStyles from '../styles/ShowInfoPanel.module.scss'
 import { ThemeContext } from '../context/ThemeContext'
 import CustomizedSnackbar from './CustomizedSnackbar';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import ReactTooltip from 'react-tooltip';
 
 function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
-    const { theme, toggle, dark } = React.useContext(ThemeContext);
+    const { theme, toggle, info } = React.useContext(ThemeContext);
     const [backgroundColor, setBackgroundColor] = useState('#E2E6EA');
     const [color, setColor] = useState('#222');
     const [showJoinRoomPanel, setShowJoinRoomPanel] = useState(false);
@@ -52,14 +53,36 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                 </div>
             }
             <div className={styles.bottomRightBar}> 
+
+                {/* Copy Current Room ID */}
                 <CopyToClipboard
                     text={roomId}
                 >
-                    <div className={styles.toggleTheme} style={{background: `${backgroundColor}`, color: `${color}`}}>🔗</div>
+                    <div>
+                        <a data-tip data-for='copyRoomAddress' className={styles.toggleTheme} style={{background: `${backgroundColor}`, color: `${color}`}}> 🔗 </a>
+                        <ReactTooltip id='copyRoomAddress' type='info' effect="solid">
+                            <span>Copy <br></br> Room <br></br> ID </span>
+                        </ReactTooltip>
+                    </div>
                 </CopyToClipboard>
-                <div className={styles.toggleTheme} onClick={() => setShowJoinRoomPanel(!showJoinRoomPanel)} style={{background: `${backgroundColor}`, color: `${color}`}}>🚪</div>
-                <div className={styles.toggleTheme} onClick={toggle} style={{background: `${backgroundColor}`}}>💡</div>
-                <div className={styles.undo} onClick={undo} style={{background: `${disabled ? '#222' : backgroundColor}`}}>↺</div>
+
+                {/* Change Room */}
+                <a data-tip data-for='joinRoom' className={styles.toggleTheme} onClick={() => setShowJoinRoomPanel(!showJoinRoomPanel)} style={{background: `${backgroundColor}`, color: `${color}`}}> 🚪 </a>
+                <ReactTooltip id='joinRoom' type='info' effect="solid">
+                    <span>Change <br></br> Room</span>
+                </ReactTooltip>
+
+                {/* Toggle theme */}
+                <a data-tip data-for='toggleTheme' className={styles.toggleTheme} onClick={toggle} style={{background: `${backgroundColor}`}}> 💡 </a>
+                <ReactTooltip id='toggleTheme' type='info' effect="solid">
+                    <span>Change <br></br> Theme</span>
+                </ReactTooltip>
+
+                <a data-tip data-for='undo' className={styles.undo} onClick={undo} style={{background: `${disabled ? '#222' : backgroundColor}`}}> ↺ </a>
+                <ReactTooltip id='undo' type={`${disabled ? 'error' : 'info'}`} effect="solid">
+                    <span>Undo</span>
+                </ReactTooltip>
+
                 <div className={styles.scale} style={{background: `${backgroundColor}`, color: `${color}`}}>Scale: {scale.toFixed(1)}</div> 
             </div>
 
@@ -69,3 +92,6 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
 }
 
 export default BottomRightBar
+
+
+

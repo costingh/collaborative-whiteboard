@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
 
-    div {
+    a {
         border-radius: 7px;
         width: 45px;
         height: 45px;
@@ -15,5 +15,6 @@
         justify-content: center;
         cursor: pointer;
         margin-right: 15px;
+        text-decoration: none !important;
     }
 }
