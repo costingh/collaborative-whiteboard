@@ -5,6 +5,7 @@ import { ThemeContext } from '../context/ThemeContext'
 import CustomizedSnackbar from './CustomizedSnackbar';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
+import CreateTooltip from './CreateTooltip';
 
 function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     const { theme, toggle, info } = React.useContext(ThemeContext);
@@ -67,21 +68,40 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                 </CopyToClipboard>
 
                 {/* Change Room */}
-                <a data-tip data-for='joinRoom' className={styles.toggleTheme} onClick={() => setShowJoinRoomPanel(!showJoinRoomPanel)} style={{background: `${backgroundColor}`, color: `${color}`}}> 🚪 </a>
-                <ReactTooltip id='joinRoom' type='info' effect="solid">
-                    <span>Change <br></br> Room</span>
-                </ReactTooltip>
+                <CreateTooltip
+                    id='joinRoom'
+                    background={{background: `${backgroundColor}`, color: `${color}`}}
+                    action={() => setShowJoinRoomPanel(!showJoinRoomPanel)}
+                    stylesClass={styles.toggleTheme}
+                    icon='🚪'
+                    type={'info'}
+                    effect='solid'
+                    text={'Change Room'}
+                />
 
                 {/* Toggle theme */}
-                <a data-tip data-for='toggleTheme' className={styles.toggleTheme} onClick={toggle} style={{background: `${backgroundColor}`}}> 💡 </a>
-                <ReactTooltip id='toggleTheme' type='info' effect="solid">
-                    <span>Change <br></br> Theme</span>
-                </ReactTooltip>
+                <CreateTooltip
+                    id='toggleTheme'
+                    background={{background: `${backgroundColor}`}}
+                    action={toggle}
+                    stylesClass={styles.toggleTheme}
+                    icon='💡'
+                    type={'info'}
+                    effect='solid'
+                    text={'Change Theme'}
+                />
 
-                <a data-tip data-for='undo' className={styles.undo} onClick={undo} style={{background: `${disabled ? '#222' : backgroundColor}`}}> ↺ </a>
-                <ReactTooltip id='undo' type={`${disabled ? 'error' : 'info'}`} effect="solid">
-                    <span>Undo</span>
-                </ReactTooltip>
+                {/* Undo */}
+                <CreateTooltip
+                    id='undo'
+                    background={{background: `${disabled ? '#222' : backgroundColor}`}}
+                    action={undo}
+                    stylesClass={styles.undo}
+                    icon='↺'
+                    type={`${disabled ? 'error' : 'info'}`}
+                    effect='solid'
+                    text={'Undo'}
+                />
 
                 <div className={styles.scale} style={{background: `${backgroundColor}`, color: `${color}`}}>Scale: {scale.toFixed(1)}</div> 
             </div>
