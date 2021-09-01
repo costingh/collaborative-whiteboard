@@ -19,7 +19,7 @@ public class WebSocketTextController {
 
     @MessageMapping("/send/{roomId}")
     @SendTo("/topic/{roomId}")
-    public Coordinates[] sendMessage(@Payload Coordinates[] coordinates) {
+    public Coordinates sendMessage(@Payload Coordinates coordinates) {
         return coordinates;
     }
 }

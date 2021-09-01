@@ -6,13 +6,15 @@ public class Coordinates {
     private Long x1;
     private Long y1;
     private String color;
+    private String userID;
 
-    public Coordinates(Long x0, Long y0, Long x1, Long y1, String color) {
+    public Coordinates(Long x0, Long y0, Long x1, Long y1, String color, String userID) {
         this.x0 = x0;
         this.y0 = y0;
         this.x1 = x1;
         this.y1 = y1;
         this.color = color;
+        this.userID = userID;
     }
 
     public Long getX0() {
@@ -53,5 +55,13 @@ public class Coordinates {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }

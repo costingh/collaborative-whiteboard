@@ -12,7 +12,7 @@ import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
 
-function Canvas({sendMessage, setRoomId, incomingDrawings, roomId}) {
+function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -162,13 +162,19 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId}) {
 
         if (leftMouseDown) {
             // add the line to our drawing history
-            setDrawings(drawings => [...drawings, {
+            const drawing = {
                 x0: prevScaledX,
                 y0: prevScaledY,
                 x1: scaledX,
                 y1: scaledY,
-                color: strokeStyle
-            }])
+                color: strokeStyle,
+                userId: userId
+            };
+
+            setDrawings(drawings => [...drawings, drawing]);
+            
+            // broadcast coordinates of the latest drawing in the current room
+            sendMessage(drawing);
             
             // draw a line
             drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle);
@@ -225,65 +231,12 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId}) {
         context.stroke();
     }
 
-    // send coordinates of the last drawing (e.g. Drawing a straight line will trigger this useEffect once, therefore all the line coordinates will be sent to the server   )
-    useEffect(() => {
-        if(leftMouseDown) return; 
-        if(drawingHistory.length === 1 || drawingHistory.length === 0) return;
-
-        const startCoordinates = {
-            x: drawingHistory[drawingHistory.length-2].x,
-            y: drawingHistory[drawingHistory.length-2].y,
-        };
-
-        const endCoordinates = {
-            x: drawingHistory[drawingHistory.length-1].x,
-            y: drawingHistory[drawingHistory.length-1].y,
-        };
-
-        let firstIndex = -1;
-        let lastIndex = -1;
-
-        for(let i=0; i < drawings.length; i++) {
-            if(
-                drawings[i].x1 === startCoordinates.x && 
-                drawings[i].y1 === startCoordinates.y) {
-                firstIndex = i;
-            }
-
-            if(
-                drawings[i].x1 === endCoordinates.x && 
-                drawings[i].y1 === endCoordinates.y) {
-                lastIndex = i;
-            }
-        }
-
-        // all the coordinates of the last draw
-        const lastDraw = [];
-
-        for(let i=0; i<drawings.length; i++) 
-            if(firstIndex >= 0 && lastIndex >= 0) 
-                if(i <= lastIndex && i >= firstIndex) 
-                    lastDraw.push(drawings[i]); 
-        
-        // broadcast coordinates of the latest drawing in the current room
-        sendMessage(lastDraw)
-        setSentLastMessage(true)
-    }, [drawingHistory])
-
     // every time a new drawing comes from server, draw it only if it wasn't sent by the same client that receives it
     useEffect(() => {
-        if(sentLastMessage) {
-            // If this client sent the last drawing coordinates to server, do not redraw them
-            setSentLastMessage(false)
-        } else {
-            // If this client hasn't sent last drawing coordinates to server, draw the received coordinates
-            if(incomingDrawings.length) {
-                for (let i = 0; i < incomingDrawings.length; i++) {
-                    const line = incomingDrawings[i];
-                    drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color);
-                }
-            } 
-        }
+        // If this client sent the last drawing coordinates to server, do not redraw them
+        // Else if this client hasn't sent last drawing coordinates to server, draw the received coordinates
+        if(!incomingDrawings || incomingDrawings.userId === userId) return;
+        drawLine(toScreenX(incomingDrawings.x0), toScreenY(incomingDrawings.y0), toScreenX(incomingDrawings.x1), toScreenY(incomingDrawings.y1), incomingDrawings.color);
     }, [incomingDrawings])
 
     const undo = () => {    
