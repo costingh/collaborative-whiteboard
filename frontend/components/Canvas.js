@@ -168,7 +168,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
                 x1: scaledX,
                 y1: scaledY,
                 color: strokeStyle,
-                userId: userId
+                userID: userId
             };
 
             setDrawings(drawings => [...drawings, drawing]);

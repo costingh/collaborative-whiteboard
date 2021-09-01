@@ -4,7 +4,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-export default function CustomizedSnackbar({open, setShowSnackbar}) {
+export default function CustomizedSnackbar({open, setShowSnackbar, snackbarMsg}) {
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -16,9 +16,9 @@ export default function CustomizedSnackbar({open, setShowSnackbar}) {
 
   return (
     <div style={{position: 'absolute'}}>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          Joined room successfully
+          {snackbarMsg}
         </Alert>
       </Snackbar>
     </div>

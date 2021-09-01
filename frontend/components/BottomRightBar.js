@@ -15,6 +15,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     const roomIdRef = useRef(null);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [button, setButton] = useState(infoPanelStyles.closeBtnDisabled);
+    const [snackbarMsg, setSnackbarMsg] = useState('');
 
     useEffect(() => {
         if(!theme.secondaryColor) return;
@@ -34,10 +35,16 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
 
     const changeRoom = () => {
         if(roomIdRef.current.value === '') return;
+        setSnackbarMsg('Connected succssfully! Room ID: ' + roomIdRef.current.value)
         setRoomId(roomIdRef.current.value);
         setShowJoinRoomPanel(false);
         setButton(infoPanelStyles.closeBtnDisabled)
         setShowSnackbar(true);
+    }
+
+    const copyID = () => {
+        setSnackbarMsg('ID Copied to Clipboard!')
+        setShowSnackbar(true)
     }
 
     return (
@@ -69,6 +76,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                 {/* Copy Current Room ID */}
                 <CopyToClipboard
                     text={roomId}
+                    onCopy={copyID}
                 >
                     <div>
                         <a data-tip data-for='copyRoomAddress' className={styles.toggleTheme} style={{background: `${backgroundColor}`, color: `${color}`}}> 🔗 </a>
@@ -117,7 +125,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                 <div className={styles.scale} style={{background: `${backgroundColor}`, color: `${color}`}}>Scale: {scale.toFixed(1)}</div> 
             </div>
 
-            <CustomizedSnackbar open={showSnackbar} setShowSnackbar={setShowSnackbar}/>
+            <CustomizedSnackbar open={showSnackbar} setShowSnackbar={setShowSnackbar} snackbarMsg={snackbarMsg}/>
         </>
     )
 }

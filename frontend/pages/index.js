@@ -9,7 +9,7 @@ import randomString from 'random-string'
 const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 export default function Home() {  
-	const userId = randomString({length: 15});
+  const [userId, setUserId] = useState(randomString({length: 15}));
 	const [roomId, setRoomId] = useState(randomString({length: 15}));
 	const [incomingDrawings, setIncomingDrawings] = useState(null);
 
