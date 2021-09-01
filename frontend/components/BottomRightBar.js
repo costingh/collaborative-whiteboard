@@ -14,6 +14,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     const [showJoinRoomPanel, setShowJoinRoomPanel] = useState(false);
     const roomIdRef = useRef(null);
     const [showSnackbar, setShowSnackbar] = useState(false);
+    const [button, setButton] = useState(infoPanelStyles.closeBtnDisabled);
 
     useEffect(() => {
         if(!theme.secondaryColor) return;
@@ -23,9 +24,19 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
         setColor(theme.color);
     }, [theme])
 
+    const setButtonStyle = () => {
+        if(roomIdRef.current.value === '') {
+            setButton(infoPanelStyles.closeBtnDisabled)
+        } else {
+            setButton(infoPanelStyles.closeBtn)
+        }
+    }
+
     const changeRoom = () => {
+        if(roomIdRef.current.value === '') return;
         setRoomId(roomIdRef.current.value);
         setShowJoinRoomPanel(false);
+        setButton(infoPanelStyles.closeBtnDisabled)
         setShowSnackbar(true);
     }
 
@@ -43,12 +54,12 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                         <div className={infoPanelStyles.middle}>
                             <div className={infoPanelStyles.enterId}>
                                 <h1 className={infoPanelStyles.heading}>Enter ID:</h1>
-                                <input className={infoPanelStyles.input} placeholder="fkjsldwkwqrn" ref={roomIdRef}/>
+                                <input className={infoPanelStyles.input} placeholder="fkjsldwkwqrn" ref={roomIdRef} onChange={setButtonStyle}/>
                                 {/* <p className={infoPanelStyles.details}>room id</p> */}
                             </div>
                         </div>
                         <div className={infoPanelStyles.bottom}>
-                            <div className={infoPanelStyles.closeBtn} onClick={changeRoom}>Join Room</div>
+                            <div className={button} onClick={changeRoom}>Join Room</div>
                         </div>
                     </div>
                 </div>
@@ -62,7 +73,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                     <div>
                         <a data-tip data-for='copyRoomAddress' className={styles.toggleTheme} style={{background: `${backgroundColor}`, color: `${color}`}}> 🔗 </a>
                         <ReactTooltip id='copyRoomAddress' type='info' effect="solid">
-                            <span>Copy <br></br> Room <br></br> ID </span>
+                            <span>Copy ID </span>
                         </ReactTooltip>
                     </div>
                 </CopyToClipboard>

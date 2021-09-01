@@ -16,7 +16,7 @@ export default function CustomizedSnackbar({open, setShowSnackbar}) {
 
   return (
     <div style={{position: 'absolute'}}>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           Joined room successfully
         </Alert>
