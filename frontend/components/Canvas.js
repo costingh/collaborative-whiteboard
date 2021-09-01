@@ -262,9 +262,9 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId}) {
 
         for(let i=0; i<drawings.length; i++) 
             if(firstIndex >= 0 && lastIndex >= 0) 
-                if(i < lastIndex || i > firstIndex) 
+                if(i <= lastIndex && i >= firstIndex) 
                     lastDraw.push(drawings[i]); 
-            
+        
         // broadcast coordinates of the latest drawing in the current room
         sendMessage(lastDraw)
         setSentLastMessage(true)
