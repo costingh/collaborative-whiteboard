@@ -22,4 +22,10 @@ public class WebSocketTextController {
     public Coordinates sendMessage(@Payload Coordinates coordinates) {
         return coordinates;
     }
+
+    @MessageMapping("/send/{roomId}/user")
+    @SendTo("/topic/{roomId}/user")
+    public String joinUser(@Payload String message) {
+        return message;
+    }
 }
