@@ -26,16 +26,15 @@
             padding: 0px 20px;
         }
 
-        .enterId {
+        .enterUsername {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 15px 0px;
 
             .input {
                 border: none;
-                /* border-bottom: 1px solid #ddd; */
-                /* width: 50%; */
                 color: #333;
                 font-size: 18px;
                 font-weight: 700;
@@ -44,6 +43,27 @@
                 line-height: 30px;
                 padding: 5px;
                 flex: .5;
+                text-align: center;
+            }
+        }
+
+        .enterId {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .input {
+                border: none;
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                outline: none;
+                height: 30px;
+                line-height: 30px;
+                padding: 5px;
+                flex: .5;
+                text-align: center;
             }
 
             .heading {
@@ -97,6 +117,7 @@
             padding: 10px 20px;
             
             .closeBtn {
+                margin: 0px 5px;
                 padding: 8px 15px;
                 font-size: 15px;
                 color: #333;

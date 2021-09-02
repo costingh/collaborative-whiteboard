@@ -7,10 +7,13 @@ import ShowInfoPanel from './ShowInfoPanel';
 import ColorPickerBar from './ColorPickerBar';
 import BottomRightBar from './BottomRightBar';
 import MoreActionsBar from './MoreActionsBar';
+import ShowChooseNamePanel from './ShowChooseNamePanel';
 // theme
 import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
+// random username generator
+import {generateRandomUsername} from '../utils/utils';
 
 function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
     // load theme
@@ -21,9 +24,9 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
     const [showFileUploader, setShowFileUploader] = useState(false);
     const [textReadFromFile, setTextReadFromFile] = useState('');
     const [canvasUploaded, setCanvasUploaded] = useState(false);
-    const [showInfoPanel, setShowInfoPanel] = useState(true);
-    const [sentLastMessage, setSentLastMessage] = useState(false);
-
+    const [showInfoPanel, setShowInfoPanel] = useState(false);
+    const [pickUsername, setPickUsername] = useState(true)
+    const [username, setUsername] = useState(generateRandomUsername())
     const canvasContainerRef = useRef();
     const canvasRef = useRef();
 
@@ -349,6 +352,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
                 />
             }
             {showInfoPanel && <ShowInfoPanel setShowInfoPanel={setShowInfoPanel}/>}
+            {pickUsername && <ShowChooseNamePanel setPickUsername={setPickUsername} setUsername={setUsername} setShowInfoPanel={setShowInfoPanel}/>}
             <BottomRightBar 
                 scale={scale} 
                 undo={undo} 
