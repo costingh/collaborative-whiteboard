@@ -1,5 +1,9 @@
 import React from 'react'
-import ReactTooltip from 'react-tooltip';
+import dynamic from "next/dynamic";
+
+const ReactTooltip = dynamic(() => import("react-tooltip"), {
+  ssr: false,
+});
 
 function CreateTooltip({id, background, action, icon, type, effect, text, stylesClass}) {
     return (
