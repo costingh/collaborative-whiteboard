@@ -4,8 +4,12 @@ import infoPanelStyles from '../styles/ShowInfoPanel.module.scss'
 import { ThemeContext } from '../context/ThemeContext'
 import CustomizedSnackbar from './CustomizedSnackbar';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import ReactTooltip from 'react-tooltip';
 import CreateTooltip from './CreateTooltip';
+import dynamic from "next/dynamic";
+
+const ReactTooltip = dynamic(() => import("react-tooltip"), {
+  ssr: false,
+});
 
 function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     const { theme, toggle, info } = React.useContext(ThemeContext);
