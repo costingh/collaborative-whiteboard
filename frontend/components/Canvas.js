@@ -12,10 +12,8 @@ import ShowChooseNamePanel from './ShowChooseNamePanel';
 import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
-// random username generator
-import {generateRandomUsername} from '../utils/utils';
 
-function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
+function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, setUsername}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -26,7 +24,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
     const [canvasUploaded, setCanvasUploaded] = useState(false);
     const [showInfoPanel, setShowInfoPanel] = useState(false);
     const [pickUsername, setPickUsername] = useState(true)
-    const [username, setUsername] = useState(generateRandomUsername())
+
     const canvasContainerRef = useRef();
     const canvasRef = useRef();
 
@@ -352,7 +350,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId}) {
                 />
             }
             {showInfoPanel && <ShowInfoPanel setShowInfoPanel={setShowInfoPanel}/>}
-            {pickUsername && <ShowChooseNamePanel setPickUsername={setPickUsername} setUsername={setUsername} setShowInfoPanel={setShowInfoPanel}/>}
+            <ShowChooseNamePanel pickUsername={pickUsername} setPickUsername={setPickUsername} setUsername={setUsername} setShowInfoPanel={setShowInfoPanel}/>
             <BottomRightBar 
                 scale={scale} 
                 undo={undo} 

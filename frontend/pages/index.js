@@ -5,6 +5,8 @@ import {ThemeProvider} from "../context/ThemeContext"
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs';
 import randomString from 'random-string'
+// random username generator
+import {generateRandomUsername} from '../utils/utils';
 
 const SOCKET_URL = 'http://localhost:8080/ws-message';
 
@@ -12,7 +14,8 @@ export default function Home() {
   const [userId, setUserId] = useState(randomString({length: 15}));
 	const [roomId, setRoomId] = useState(randomString({length: 15}));
 	const [incomingDrawings, setIncomingDrawings] = useState(null);
-
+  const [username, setUsername] = useState(generateRandomUsername())
+    
 	const ws = useRef(null);
 	const stomp = useRef(null);
 
@@ -48,6 +51,7 @@ export default function Home() {
           incomingDrawings={incomingDrawings}
           roomId={roomId}
 		      userId={userId}
+          setUsername={setUsername}
         />
       </ThemeProvider>
     </Layout>
