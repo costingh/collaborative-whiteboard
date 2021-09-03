@@ -23,20 +23,23 @@ export default function Room() {
 	const [rid, setRid] = useState(null);
   	const [userId, setUserId] = useState(randomString({length: 15}));
 	const [incomingDrawings, setIncomingDrawings] = useState(null);
-  	const [username, setUsername] = useState(generateRandomUsername());
+  	const [username, setUsername] = useState(null);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
+
+	let messagesSubscription = null;
+	let canvasSubscription = null;
 
 	const ws = useRef(null);
 	const stomp = useRef(null);
 
     useEffect(() => {
-		if(!rid) {
+		if(!rid || !username) {
 			setRid(router.query.rid)
 		} else {
 			ws.current = new SockJS(SOCKET_URL);
 			ws.current.onopen = () => alert("ws opened");
-			ws.current.onclose = () => alert("ws closed");
+			ws.current.onclose = () => alert(1000);
 
 			stomp.current = Stomp.over(ws.current);
 			stomp.current.reconnect_delay = 5000;
@@ -44,21 +47,25 @@ export default function Room() {
 				const message = 'User ' + username + ' has joined the room!' ;
 				stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
 
-				stomp.current.subscribe(`/topic/${rid}/user`, msg => {
+				messagesSubscription = stomp.current.subscribe(`/topic/${rid}/user`, msg => {
 					setSnackbarMsg(JSON.parse(msg.body));
 					setSnackbarOpen(true);
 				});
 
-				stomp.current.subscribe(`/topic/${rid}`, coordinates => {
+				canvasSubscription = stomp.current.subscribe(`/topic/${rid}`, coordinates => {
 					setIncomingDrawings(JSON.parse(coordinates.body)) 
 				});
 			});
 
+
+
+			
+			
 			return () => {
 				ws.current.close();
 			};
 		}
-    }, [rid]);
+    }, [rid, username]);
 
 	const sendMessage = (message) => {
 		stomp.current.send(`/app/send/${rid}`, {}, JSON.stringify(message));
@@ -67,6 +74,18 @@ export default function Room() {
 	const setRoomId = (newId) => {
 		router.push(`/room/${newId}`);
 		setRid(newId)
+	}
+
+	// Run this code when client refreshes the page or closes the tab (disconnect the socket and send message in room)
+	if (process.browser) {
+		window.onbeforeunload = () => {
+			const message = 'User ' + username + ' has left the room!' ;
+			stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
+			stomp.current.disconnect(frame => {
+				if(messagesSubscription) messagesSubscription.unsubscribe();
+				if(canvasSubscription) canvasSubscription.unsubscribe();
+			}, {})
+		}
 	}
 
   return (
