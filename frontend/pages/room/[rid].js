@@ -72,19 +72,24 @@ export default function Room() {
 	}
 
 	const setRoomId = (newId) => {
+		disconnect();
 		router.push(`/room/${newId}`);
 		setRid(newId)
+	}
+
+	const disconnect = () => {
+		const message = 'User ' + username + ' has left the room!' ;
+		stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
+		stomp.current.disconnect(frame => {
+			if(messagesSubscription) messagesSubscription.unsubscribe();
+			if(canvasSubscription) canvasSubscription.unsubscribe();
+		}, {})
 	}
 
 	// Run this code when client refreshes the page or closes the tab (disconnect the socket and send message in room)
 	if (process.browser) {
 		window.onbeforeunload = () => {
-			const message = 'User ' + username + ' has left the room!' ;
-			stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
-			stomp.current.disconnect(frame => {
-				if(messagesSubscription) messagesSubscription.unsubscribe();
-				if(canvasSubscription) canvasSubscription.unsubscribe();
-			}, {})
+			disconnect();
 		}
 	}
 
