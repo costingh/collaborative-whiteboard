@@ -20,7 +20,7 @@ const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 export default function Room() {  
     const router = useRouter()
-    const { rid } = router.query
+	const [rid, setRid] = useState(null);
   	const [userId, setUserId] = useState(randomString({length: 15}));
 	const [incomingDrawings, setIncomingDrawings] = useState(null);
   	const [username, setUsername] = useState(generateRandomUsername());
@@ -31,30 +31,34 @@ export default function Room() {
 	const stomp = useRef(null);
 
     useEffect(() => {
-        ws.current = new SockJS(SOCKET_URL);
-        ws.current.onopen = () => alert("ws opened");
-        ws.current.onclose = () => alert("ws closed");
+		if(!rid) {
+			setRid(router.query.rid)
+		} else {
+			ws.current = new SockJS(SOCKET_URL);
+			ws.current.onopen = () => alert("ws opened");
+			ws.current.onclose = () => alert("ws closed");
 
-		stomp.current = Stomp.over(ws.current);
-		stomp.current.reconnect_delay = 5000;
-        stomp.current.connect({}, frame => {
-			const message = 'User ' + username + ' has joined the room!' ;
-			stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
+			stomp.current = Stomp.over(ws.current);
+			stomp.current.reconnect_delay = 5000;
+			stomp.current.connect({}, frame => {
+				const message = 'User ' + username + ' has joined the room!' ;
+				stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
 
-			stomp.current.subscribe(`/topic/${rid}/user`, msg => {
-				setSnackbarMsg(JSON.parse(msg.body));
-				setSnackbarOpen(true);
+				stomp.current.subscribe(`/topic/${rid}/user`, msg => {
+					setSnackbarMsg(JSON.parse(msg.body));
+					setSnackbarOpen(true);
+				});
+
+				stomp.current.subscribe(`/topic/${rid}`, coordinates => {
+					setIncomingDrawings(JSON.parse(coordinates.body)) 
+				});
 			});
 
-			stomp.current.subscribe(`/topic/${rid}`, coordinates => {
-				setIncomingDrawings(JSON.parse(coordinates.body)) 
-			});
-        });
-
-        return () => {
-            ws.current.close();
-        };
-    }, []);
+			return () => {
+				ws.current.close();
+			};
+		}
+    }, [rid]);
 
 	const sendMessage = (message) => {
 		stomp.current.send(`/app/send/${rid}`, {}, JSON.stringify(message));
@@ -62,6 +66,7 @@ export default function Room() {
 
 	const setRoomId = (newId) => {
 		router.push(`/room/${newId}`);
+		setRid(newId)
 	}
 
   return (
@@ -87,4 +92,10 @@ export default function Room() {
       </ThemeProvider>
     </Layout>
   )
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {}, // will be passed to the page component as props
+  };
 }
