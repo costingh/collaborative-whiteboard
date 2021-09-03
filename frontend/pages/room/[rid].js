@@ -26,6 +26,10 @@ export default function Room() {
   	const [username, setUsername] = useState(null);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
+	const [usersList, setUsersList] = useState([]);
+
+	const CONNECT_USER = 'CONNECT_USER';
+	const DISCONNECT_USER = 'DISCONNECT_USER';
 
 	let messagesSubscription = null;
 	let canvasSubscription = null;
@@ -44,11 +48,16 @@ export default function Room() {
 			stomp.current = Stomp.over(ws.current);
 			stomp.current.reconnect_delay = 5000;
 			stomp.current.connect({}, frame => {
-				const message = 'User ' + username + ' has joined the room!' ;
-				stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
+				const userJoinedRoom = {
+					message: username,
+					payload: CONNECT_USER
+				} ;
+				stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userJoinedRoom));
 
-				messagesSubscription = stomp.current.subscribe(`/topic/${rid}/user`, msg => {
-					setSnackbarMsg(JSON.parse(msg.body));
+				messagesSubscription = stomp.current.subscribe(`/topic/${rid}/user`, roomActions => {
+					const response = JSON.parse(roomActions.body);
+					setSnackbarMsg(response.message);
+					setUsersList(response.users);
 					setSnackbarOpen(true);
 				});
 
@@ -57,10 +66,6 @@ export default function Room() {
 				});
 			});
 
-
-
-			
-			
 			return () => {
 				ws.current.close();
 			};
@@ -78,8 +83,11 @@ export default function Room() {
 	}
 
 	const disconnect = () => {
-		const message = 'User ' + username + ' has left the room!' ;
-		stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(message));
+		const userLeftRoom = {
+			message: username,
+			payload: DISCONNECT_USER
+		} ;
+		stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userLeftRoom));
 		stomp.current.disconnect(frame => {
 			if(messagesSubscription) messagesSubscription.unsubscribe();
 			if(canvasSubscription) canvasSubscription.unsubscribe();
@@ -103,6 +111,7 @@ export default function Room() {
 			roomId={rid}
 			userId={userId}
           	setUsername={setUsername}
+			usersList={usersList}
         />
 		<CustomizedSnackbar 
 			open={snackbarOpen} 

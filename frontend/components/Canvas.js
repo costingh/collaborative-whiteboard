@@ -13,7 +13,7 @@ import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
 
-function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, setUsername}) {
+function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, setUsername, usersList}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -342,7 +342,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, setUs
                 disabled={disabled}
                 importFile={importFile}
             />
-            <OnlineUsers/>
+            <OnlineUsers usersList={usersList}/>
             {showFileUploader 
                 && <FileUploader 
                     setShowFileUploader={setShowFileUploader}
