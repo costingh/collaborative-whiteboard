@@ -48,8 +48,9 @@ export default function Room() {
 			stomp.current.reconnect_delay = 5000;
 			stomp.current.connect({}, frame => {
 				const userJoinedRoom = {
-					message: username,
-					payload: CONNECT_USER
+					username: username,
+					payload: CONNECT_USER,
+					roomId: rid
 				} ;
 				stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userJoinedRoom));
 
@@ -83,8 +84,9 @@ export default function Room() {
 
 	const disconnect = () => {
 		const userLeftRoom = {
-			message: username,
-			payload: DISCONNECT_USER
+			username: username,
+			payload: DISCONNECT_USER,
+			roomId: rid
 		} ;
 		stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userLeftRoom));
 		stomp.current.disconnect(frame => {

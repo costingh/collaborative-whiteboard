@@ -3,6 +3,8 @@ package com.project.whiteboard.service;
 import com.project.whiteboard.Dao.RoomDao;
 import com.project.whiteboard.model.Room;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,10 +1,11 @@
 package com.project.whiteboard.controller;
 
-import com.project.whiteboard.model.ActionResponseDTO;
-import com.project.whiteboard.model.Coordinates;
-import com.project.whiteboard.model.RoomActionsDTO;
-import com.project.whiteboard.model.TextMessageDTO;
+import com.project.whiteboard.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -13,12 +14,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class WebSocketTextController {
-    List<String> userNames = new ArrayList<String>();
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     SimpMessagingTemplate template;
@@ -32,22 +34,28 @@ public class WebSocketTextController {
     @MessageMapping("/send/{roomId}/user")
     @SendTo("/topic/{roomId}/user")
     public ActionResponseDTO joinUser(@Payload RoomActionsDTO roomActions) {
-        String username = roomActions.getMessage();
+        String username = roomActions.getUsername();
         String action = roomActions.getPayload();
+        String roomId = roomActions.getRoomId();
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(roomId));
+        Update updateQuery = new Update();
 
         if(action.equals("CONNECT_USER")) {
-            userNames.add(username);
-            String message = "User " + username + " has joined the room!";
-            return new ActionResponseDTO(message, userNames);
+            updateQuery.push("participants", username);
+            mongoTemplate.updateFirst(query, updateQuery, Room.class);
+
+            String message = "User " + username + " has successfully connected!";
+            return new ActionResponseDTO(message, mongoTemplate.findById(roomId, Room.class).getParticipants());
         } else if(action.equals("DISCONNECT_USER")) {
-            if(userNames.indexOf(username) != -1) {
-                userNames.remove(userNames.indexOf(username));
-            }
-            String message = "User " + username + " has left the room!";
-            return new ActionResponseDTO(message, userNames);
+            updateQuery.pull("participants", username);
+            mongoTemplate.updateFirst(query, updateQuery, Room.class);
+
+            String message = "User " + username + " has disconnected!";
+            return new ActionResponseDTO(message, mongoTemplate.findById(roomId, Room.class).getParticipants());
         } else {
-            String message = "Action not supported";
-            return new ActionResponseDTO(message, userNames);
+            return new ActionResponseDTO("Not supported", new ArrayList<String>());
         }
     }
 }
