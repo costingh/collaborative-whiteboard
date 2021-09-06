@@ -220,6 +220,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, users
         let context = canvasRef.current.getContext("2d");
         context.beginPath();
         context.moveTo(x0, y0);
+        context.lineCap = 'round';
         context.lineTo(x1, y1);
 
         if(instrument === 'pencil') context.strokeStyle = color;
