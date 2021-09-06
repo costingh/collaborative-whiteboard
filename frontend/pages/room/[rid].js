@@ -70,7 +70,22 @@ export default function Room() {
 				ws.current.close();
 			};
 		}
-    }, [rid, username]);
+	}, [rid, username]);
+	
+	// handle route change | When user clicks back button, disconnect from room
+	useEffect(() => {
+		const handleRouteChange = (url, { shallow }) => {
+			disconnect();
+		}
+
+		router.events.on('routeChangeStart', handleRouteChange)
+
+		// If the component is unmounted, unsubscribe
+		// from the event with the `off` method:
+		return () => {
+			router.events.off('routeChangeStart', handleRouteChange)
+		}
+	}, [router])
 
 	const sendMessage = (message) => {
 		stomp.current.send(`/app/send/${rid}`, {}, JSON.stringify(message));
