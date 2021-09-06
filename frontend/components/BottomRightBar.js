@@ -42,22 +42,29 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     const changeRoom = () => {
         if(roomIdRef.current.value === '') return 
         else {
-            getRoom(roomIdRef.current.value)
-			.then((resp) => {
-				setSnackbarMsg('Connected succssfully to: ' + resp.name)
-                setRoomId(roomIdRef.current.value);
-                setShowJoinRoomPanel(false);
-                setButton(infoPanelStyles.closeBtnDisabled)
+            if(roomId === roomIdRef.current.value) {
+                // User is trying to connect to the same room he's already connected
+                setSnackbarMsg('You are already connected to this room!')
                 setShowSnackbar(true);
-                setSnackbarSeverity("success");
-			})
-			.catch((err) => {
-                setSnackbarMsg('Room doesn\'t exist')
-                setShowSnackbar(true);
-                setSnackbarSeverity("error");
-			})
+                setSnackbarSeverity("warning");
+            } else {
+                // User tries to connect to a different room, therefor we should check if the room exists in DB
+                getRoom(roomIdRef.current.value)
+                    .then((resp) => {
+                        setSnackbarMsg('Connected succssfully to: ' + resp.name)
+                        setRoomId(roomIdRef.current.value);
+                        setShowJoinRoomPanel(false);
+                        setButton(infoPanelStyles.closeBtnDisabled)
+                        setShowSnackbar(true);
+                        setSnackbarSeverity("success");
+                    })
+                    .catch((err) => {
+                        setSnackbarMsg('Room doesn\'t exist')
+                        setShowSnackbar(true);
+                        setSnackbarSeverity("error");
+                    })
+            }
         }
-        
     }
 
     const copyID = () => {
