@@ -39,6 +39,8 @@ export default function Room() {
 		if(!rid || !username) {
 			setRid(router.query.rid)
 			setUsername(router.query.username)
+			localStorage.setItem('rid', router.query.rid);
+			localStorage.setItem('username',router.query.username);
 		} else {
 			ws.current = new SockJS(SOCKET_URL);
 			ws.current.onopen = () => alert("ws opened");
@@ -74,6 +76,7 @@ export default function Room() {
 	
 	// handle route change | When user clicks back button, disconnect from room
 	useEffect(() => {
+		console.log("Route change")
 		const handleRouteChange = (url, { shallow }) => {
 			disconnect();
 		}
@@ -98,16 +101,25 @@ export default function Room() {
 	}
 
 	const disconnect = () => {
-		const userLeftRoom = {
-			username: username,
-			payload: DISCONNECT_USER,
-			roomId: rid
-		} ;
-		stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userLeftRoom));
-		stomp.current.disconnect(frame => {
-			if(messagesSubscription) messagesSubscription.unsubscribe();
-			if(canvasSubscription) canvasSubscription.unsubscribe();
-		}, {})
+		const rid = localStorage.getItem('rid');
+		const username = localStorage.getItem('username');
+		console.log('Rid: ' + rid)
+		console.log('username: ' + username)
+		if(rid && username) {
+			const userLeftRoom = {
+				username: username,
+				payload: DISCONNECT_USER,
+				roomId: rid
+			} ;
+			stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userLeftRoom));
+			stomp.current.disconnect(frame => {
+				if(messagesSubscription) messagesSubscription.unsubscribe();
+				if(canvasSubscription) canvasSubscription.unsubscribe();
+			}, {})
+
+			localStorage.removeItem('rid');
+			localStorage.removeItem('username');
+		}
 	}
 
 	// Run this code when client refreshes the page or closes the tab (disconnect the socket and send message in room)
