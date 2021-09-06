@@ -7,7 +7,6 @@ import ShowInfoPanel from './ShowInfoPanel';
 import ColorPickerBar from './ColorPickerBar';
 import BottomRightBar from './BottomRightBar';
 import MoreActionsBar from './MoreActionsBar';
-import ShowChooseNamePanel from './ShowChooseNamePanel';
 // theme
 import { ThemeContext } from '../context/ThemeContext';
 // save functionality

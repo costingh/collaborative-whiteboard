@@ -13,17 +13,15 @@ import SockJS from 'sockjs-client'
 import Stomp from 'stompjs';
 // method to generate ramdom strings
 import randomString from 'random-string'
-// random username generator
-import {generateRandomUsername} from '../../utils/utils';
 
 const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 export default function Room() {  
-    const router = useRouter()
+	const router = useRouter()
 	const [rid, setRid] = useState(null);
   	const [userId, setUserId] = useState(randomString({length: 15}));
 	const [incomingDrawings, setIncomingDrawings] = useState(null);
-  	const username = 'random'
+  	const [username, setUsername] = useState(null);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
 	const [usersList, setUsersList] = useState([]);
@@ -40,6 +38,7 @@ export default function Room() {
     useEffect(() => {
 		if(!rid || !username) {
 			setRid(router.query.rid)
+			setUsername(router.query.username)
 		} else {
 			ws.current = new SockJS(SOCKET_URL);
 			ws.current.onopen = () => alert("ws opened");
@@ -99,8 +98,7 @@ export default function Room() {
 		window.onbeforeunload = () => {
 			disconnect();
 		}
-	}
-
+	} 
   return (
     <Layout>
       <ThemeProvider>

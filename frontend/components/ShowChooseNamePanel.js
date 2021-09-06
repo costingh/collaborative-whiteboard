@@ -66,21 +66,17 @@ function ShowChooseNamePanel() {
                 participants
             );
 
-            usernameRef.current.value = '';
-            roomNameRef.current.value = '';
-            roomDescriptionRef.current.value = '';
-
             room
                 .then((resp) => {
-                    router.push(`/room/${resp.id}`);
+                    router.push(`/room/${resp.id}?username=${usernameRef.current.value}`);
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => console.log(err))  
         }
     }
 
     const handleJoinRoom = () => {
         if(button !== styles.closeBtnDisabled && !showCreateRoom) {
-            router.push(`/room/${roomAddressRef.current.value}`);
+            router.push(`/room/${roomAddressRef.current.value}?username=${usernameRef.current.value}`);
         }
     }
 
