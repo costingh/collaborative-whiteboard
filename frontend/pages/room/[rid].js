@@ -103,8 +103,7 @@ export default function Room() {
 	const disconnect = () => {
 		const rid = localStorage.getItem('rid');
 		const username = localStorage.getItem('username');
-		console.log('Rid: ' + rid)
-		console.log('username: ' + username)
+		
 		if(rid && username) {
 			const userLeftRoom = {
 				username: username,
