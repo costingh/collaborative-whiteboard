@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +25,13 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Room>> getRoom(@PathVariable String id) {
-        return ResponseEntity.ok(roomService.getRoom(id));
+    public Optional<Room> getRoom(@PathVariable String id) {
+        try {
+            Optional<Room> room = roomService.getRoom(id);
+            return room;
+        } catch (HttpClientErrorException.NotFound e){
+            return Optional.empty();
+        }
     }
 
     @GetMapping("/all")

@@ -55,7 +55,7 @@ public class WebSocketTextController {
             // If the room is empty, delete it from DB
             if(mongoTemplate.findById(roomId, Room.class).getParticipants().size() == 0)
                 mongoTemplate.remove(query, Room.class);
-            
+
             String message = "User " + username + " has disconnected!";
             return new ActionResponseDTO(message, mongoTemplate.findById(roomId, Room.class).getParticipants());
         } else {
