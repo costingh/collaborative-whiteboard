@@ -96,7 +96,9 @@ export default function Room() {
 
 	const setRoomId = (newId) => {
 		disconnect();
-		router.push(`/room/${newId}`);
+		router.push(`/room/${newId}?username=${username}`);
+		localStorage.removeItem('rid');
+		localStorage.setItem('rid', newId);
 		setRid(newId)
 	}
 

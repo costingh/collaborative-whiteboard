@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -47,7 +48,8 @@ public class WebSocketTextController {
             mongoTemplate.updateFirst(query, updateQuery, Room.class);
 
             String message = "User " + username + " has successfully connected!";
-            return new ActionResponseDTO(message, mongoTemplate.findById(roomId, Room.class).getParticipants());
+            Room room = mongoTemplate.findById(roomId, Room.class);
+            return new ActionResponseDTO(message, room.getParticipants());
         } else if(action.equals("DISCONNECT_USER")) {
             updateQuery.pull("participants", username);
             mongoTemplate.updateFirst(query, updateQuery, Room.class);

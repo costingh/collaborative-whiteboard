@@ -6,6 +6,7 @@ import CustomizedSnackbar from './CustomizedSnackbar';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import CreateTooltip from './CreateTooltip';
 import dynamic from "next/dynamic";
+import {getRoom} from '../utils/getRoom'
 
 const ReactTooltip = dynamic(() => import("react-tooltip"), {
   ssr: false,
@@ -20,6 +21,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [button, setButton] = useState(infoPanelStyles.closeBtnDisabled);
     const [snackbarMsg, setSnackbarMsg] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
     useEffect(() => {
         if(!theme.secondaryColor) return;
@@ -38,17 +40,30 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
     }
 
     const changeRoom = () => {
-        if(roomIdRef.current.value === '') return;
-        setSnackbarMsg('Connected succssfully! Room ID: ' + roomIdRef.current.value)
-        setRoomId(roomIdRef.current.value);
-        setShowJoinRoomPanel(false);
-        setButton(infoPanelStyles.closeBtnDisabled)
-        setShowSnackbar(true);
+        if(roomIdRef.current.value === '') return 
+        else {
+            getRoom(roomIdRef.current.value)
+			.then((resp) => {
+				setSnackbarMsg('Connected succssfully to: ' + resp.name)
+                setRoomId(roomIdRef.current.value);
+                setShowJoinRoomPanel(false);
+                setButton(infoPanelStyles.closeBtnDisabled)
+                setShowSnackbar(true);
+                setSnackbarSeverity("success");
+			})
+			.catch((err) => {
+                setSnackbarMsg('Room doesn\'t exist')
+                setShowSnackbar(true);
+                setSnackbarSeverity("error");
+			})
+        }
+        
     }
 
     const copyID = () => {
         setSnackbarMsg('ID Copied to Clipboard!')
         setShowSnackbar(true)
+        setSnackbarSeverity("info");
     }
 
     return (
@@ -66,7 +81,6 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                             <div className={infoPanelStyles.enterId}>
                                 <h1 className={infoPanelStyles.heading}>Enter ID:</h1>
                                 <input className={infoPanelStyles.input} placeholder="fkjsldwkwqrn" ref={roomIdRef} onChange={setButtonStyle}/>
-                                {/* <p className={infoPanelStyles.details}>room id</p> */}
                             </div>
                         </div>
                         <div className={infoPanelStyles.bottom}>
@@ -129,7 +143,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                 <div className={styles.scale} style={{background: `${backgroundColor}`, color: `${color}`}}>Scale: {scale.toFixed(1)}</div> 
             </div>
 
-            <CustomizedSnackbar open={showSnackbar} setShowSnackbar={setShowSnackbar} snackbarMsg={snackbarMsg}/>
+            <CustomizedSnackbar open={showSnackbar} setShowSnackbar={setShowSnackbar} snackbarMsg={snackbarMsg} severity={snackbarSeverity}/>
         </>
     )
 }
