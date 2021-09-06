@@ -1,15 +1,8 @@
-import React, {useEffect} from 'react';
-import { useRouter } from 'next/router'
-// method to generate ramdom strings
-import randomString from 'random-string'
+import React from 'react';
+import ShowChooseNamePanel from '../components/ShowChooseNamePanel'
 
 export default function Home() {  
-	const router = useRouter()
-	
-	useEffect(() => {
-		// create a room and join user 
-		const roomId = randomString({length: 15});
-		router.push(`/room/${roomId}`);
-	}, [])
-  return <div></div>
+  return <div style={{background: '#333', position: 'absolute', height: '100vh', width: '100vw', left: 0, top: 0}}>
+	  <ShowChooseNamePanel/>
+  </div>
 }

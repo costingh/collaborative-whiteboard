@@ -10,13 +10,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
     .inner {
         min-width: 200px;
         width: 500px;
         background: #fff;
         border-radius: 10px;
-
         .top {
             width: 100%;
             display: flex;
@@ -25,14 +23,12 @@
             border-bottom: 1px solid #ccc;
             padding: 0px 20px;
         }
-
         .enterUsername {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px 0px;
-
+            padding: 0px 0px;
             .input {
                 border: none;
                 color: #333;
@@ -45,14 +41,24 @@
                 flex: .5;
                 text-align: center;
             }
+            .textarea {
+                border: none;
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                outline: none;
+                height: 80px;
+                line-height: 20px;
+                padding: 5px;
+                flex: 1;
+                text-align: center;
+            }
         }
-
         .enterId {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-
             .input {
                 border: none;
                 color: #333;
@@ -65,7 +71,6 @@
                 flex: .5;
                 text-align: center;
             }
-
             .heading {
                 color: #333;
                 font-size: 18px;
@@ -74,28 +79,24 @@
                 flex: .5;
             }
         }
-
         .paragraph {
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-
             h1 {
                 color: #333;
                 font-size: 18px;
                 font-weight: 700;
             }
-
             .heading {
                 color: #333;
                 font-size: 18px;
                 font-weight: 700;
                 text-align: center;
                 flex: .3;
-                    text-align: center;
+                text-align: center;
             }
-
             .close {
                 color: #333;
                 font-size: 18px;
@@ -107,7 +108,6 @@
                 }
             }
         }
-
         .bottom {
             width: 100%;
             display: flex;
@@ -115,7 +115,6 @@
             justify-content: center;
             align-items: center;
             padding: 10px 20px;
-            
             .closeBtn {
                 margin: 0px 5px;
                 padding: 8px 15px;
@@ -130,7 +129,6 @@
                     background: #333;
                 }
             }
-
             .closeBtnDisabled {
                 padding: 8px 15px;
                 font-size: 15px;
@@ -141,6 +139,4 @@
             }
         }
     }
-
-    
 }

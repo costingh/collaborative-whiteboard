@@ -13,7 +13,7 @@ import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
 
-function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, setUsername, usersList}) {
+function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, usersList}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -22,8 +22,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, setUs
     const [showFileUploader, setShowFileUploader] = useState(false);
     const [textReadFromFile, setTextReadFromFile] = useState('');
     const [canvasUploaded, setCanvasUploaded] = useState(false);
-    const [showInfoPanel, setShowInfoPanel] = useState(false);
-    const [pickUsername, setPickUsername] = useState(true)
+    const [showInfoPanel, setShowInfoPanel] = useState(true);
 
     const canvasContainerRef = useRef();
     const canvasRef = useRef();
@@ -350,7 +349,6 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, setUs
                 />
             }
             {showInfoPanel && <ShowInfoPanel setShowInfoPanel={setShowInfoPanel}/>}
-            <ShowChooseNamePanel pickUsername={pickUsername} setPickUsername={setPickUsername} setUsername={setUsername} setShowInfoPanel={setShowInfoPanel}/>
             <BottomRightBar 
                 scale={scale} 
                 undo={undo} 

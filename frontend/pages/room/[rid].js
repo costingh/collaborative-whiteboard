@@ -23,7 +23,7 @@ export default function Room() {
 	const [rid, setRid] = useState(null);
   	const [userId, setUserId] = useState(randomString({length: 15}));
 	const [incomingDrawings, setIncomingDrawings] = useState(null);
-  	const [username, setUsername] = useState(null);
+  	const username = 'random'
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
 	const [usersList, setUsersList] = useState([]);
@@ -110,7 +110,6 @@ export default function Room() {
 			incomingDrawings={incomingDrawings}
 			roomId={rid}
 			userId={userId}
-          	setUsername={setUsername}
 			usersList={usersList}
         />
 		<CustomizedSnackbar 

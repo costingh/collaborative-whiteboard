@@ -18,9 +18,9 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping
-    public ResponseEntity createRoom(@RequestBody Room room) {
+    public ResponseEntity<Room> createRoom(@RequestBody Room room) {
         roomService.save(room);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(room);
     }
 
     @GetMapping("/{id}")
