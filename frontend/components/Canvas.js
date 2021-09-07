@@ -361,6 +361,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, users
                 setLineWidth={setLineWidth} 
                 setInstrument={setInstrument} 
                 instrument={instrument}
+                color={strokeStyle}
             />
             <canvas 
                 id="canvas" 

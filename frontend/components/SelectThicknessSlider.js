@@ -17,8 +17,8 @@ function SelectThicknessSlider({lineWidth, setLineWidth, instrument}) {
 
     useEffect(() => {
         if(instrument === 'pencil') {
-            setMaxVal(10);
-            if(lineWidth > 10) setLineWidth(10);
+            setMaxVal(40);
+            if(lineWidth > 40) setLineWidth(40);
         }
         else if (instrument ==='eraser') setMaxVal(40);
         else console.log('error!')
