@@ -25,6 +25,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, users
 
     const canvasContainerRef = useRef();
     const canvasRef = useRef();
+    const cursorRef = useRef();
 
     // stroke style (the current color to draw on canvas)
     const [strokeStyle, setStrokeStyle] = useState('#fff');
@@ -80,6 +81,12 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, users
         setBackground(theme.backgroundColor);
     }, [theme])
   
+    useEffect(() => {
+        if(instrument === 'eraser') document.body.style.cursor = 'none';
+        else if(instrument === 'pencil') document.body.style.cursor = 'default';
+        else document.body.style.cursor = 'default';
+        
+    }, [instrument])
 
     // convert coordinates
     const toScreenX = xTrue => ((xTrue + offsetX) * scale)
@@ -372,6 +379,23 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, users
                 onMouseMove={onMouseMove}
                 onWheel={onMouseWheel}
             >Your browser does not support HTML5 canvas</canvas>
+            {instrument === 'eraser'
+                &&  <div
+                        ref={cursorRef}
+                        style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: "50%",
+                            border: `1px solid ${theme.secondaryColor}`,
+                            position: "absolute",
+                            zIndex: 999999999,
+                            top: cursorY - 10,
+                            left: cursorX - 10,
+                            pointerEvents: "none"
+                        }}
+                    ></div>
+
+            }
         </div>
     )
 }
