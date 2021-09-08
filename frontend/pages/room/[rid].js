@@ -19,7 +19,6 @@ const SOCKET_URL = 'http://localhost:8080/ws-message';
 export default function Room() {  
 	const router = useRouter()
 	const [rid, setRid] = useState(null);
-  	const [userId, setUserId] = useState(randomString({length: 15}));
 	const [incomingDrawings, setIncomingDrawings] = useState(null);
   	const [username, setUsername] = useState(null);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -137,8 +136,8 @@ export default function Room() {
 			setRoomId={setRoomId}
 			incomingDrawings={incomingDrawings}
 			roomId={rid}
-			userId={userId}
 			usersList={usersList}
+			username={username}
         />
 		<CustomizedSnackbar 
 			open={snackbarOpen} 

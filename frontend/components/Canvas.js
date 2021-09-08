@@ -12,7 +12,7 @@ import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
 
-function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, usersList}) {
+function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, username}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')
@@ -174,7 +174,9 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, users
                 x1: scaledX,
                 y1: scaledY,
                 color: strokeStyle,
-                userID: userId
+                username: username,
+                lineWidth: lineWidth,
+                instrument: instrument
             };
 
             setDrawings(drawings => [...drawings, drawing]);
@@ -242,7 +244,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, userId, users
     useEffect(() => {
         // If this client sent the last drawing coordinates to server, do not redraw them
         // Else if this client hasn't sent last drawing coordinates to server, draw the received coordinates
-        if(!incomingDrawings || incomingDrawings.userId === userId) return;
+        if(!incomingDrawings || incomingDrawings.username === username) return;
         drawLine(toScreenX(incomingDrawings.x0), toScreenY(incomingDrawings.y0), toScreenX(incomingDrawings.x1), toScreenY(incomingDrawings.y1), incomingDrawings.color);
     }, [incomingDrawings])
 
