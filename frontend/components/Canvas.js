@@ -66,25 +66,22 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
             redrawCanvas();
         });
         redrawCanvas();
-
-        
     }, [])
 
     useEffect(() => {
+        // Every time a user joins a room, fetch drawings from server
         if(roomId) {
             getDrawings(roomId)
             .then((resp) => {
                 let allNewDrawingsCoords = [];
-
                 for(let i = 0; i < resp.length; i++) {
                     // for every drawing from DB
                     for(let j = 0; j < resp[i].line.length; j++) {
-                        allNewDrawingsCoords.push(resp[i].line[j])
-                        // set drawings
-                        setDrawings(drawings => [...drawings, resp[i].line[j]]);
+                        allNewDrawingsCoords.push(resp[i].line[j])   
                     }
                 }
-
+                // set drawings
+                setDrawings(drawings => [...drawings, allNewDrawingsCoords]);
                 // redraw canvas
                 drawToCanvas(allNewDrawingsCoords)
             })
@@ -93,12 +90,6 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
             })
         }
     }, [roomId])
-
-    /* useEffect(() => {
-        redrawCanvas()
-        console.log('######################################################################################################')
-        console.log(drawings)
-    }, [drawings]) */
 
     useEffect(() => {
         redrawCanvas();
