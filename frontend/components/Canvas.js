@@ -11,6 +11,8 @@ import MoreActionsBar from './MoreActionsBar';
 import { ThemeContext } from '../context/ThemeContext';
 // save functionality
 import { saveAs } from 'file-saver';
+import { saveDrawing } from '../utils/saveDrawing';
+import { getDrawings } from '../utils/getDrawings';
 
 function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, username}) {
     // load theme
@@ -63,9 +65,40 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
         window.addEventListener("resize", (event) => {
             redrawCanvas();
         });
-
         redrawCanvas();
+
+        
     }, [])
+
+    useEffect(() => {
+        if(roomId) {
+            getDrawings(roomId)
+            .then((resp) => {
+                let allNewDrawingsCoords = [];
+
+                for(let i = 0; i < resp.length; i++) {
+                    // for every drawing from DB
+                    for(let j = 0; j < resp[i].line.length; j++) {
+                        allNewDrawingsCoords.push(resp[i].line[j])
+                        // set drawings
+                        setDrawings(drawings => [...drawings, resp[i].line[j]]);
+                    }
+                }
+
+                // redraw canvas
+                drawToCanvas(allNewDrawingsCoords)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+    }, [roomId])
+
+    /* useEffect(() => {
+        redrawCanvas()
+        console.log('######################################################################################################')
+        console.log(drawings)
+    }, [drawings]) */
 
     useEffect(() => {
         redrawCanvas();
@@ -97,6 +130,21 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
     const trueWidth = () => (canvasRef.current.clientWidth / scale)
 
     const redrawCanvas = () => {      
+        canvasRef.current.width = canvasContainerRef.current.clientWidth;
+        canvasRef.current.height = canvasContainerRef.current.clientHeight;
+
+        canvasRef.current.getContext("2d").fillStyle = background;
+        canvasRef.current.getContext("2d").fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        
+       if(drawings.length) {
+            for (let i = 0; i < drawings.length; i++) {
+                const line = drawings[i];
+                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color, lineWidth, instrument);
+            }
+        }   
+    }
+
+    const drawToCanvas = (drawings) => {      
         canvasRef.current.width = canvasContainerRef.current.clientWidth;
         canvasRef.current.height = canvasContainerRef.current.clientHeight;
 
@@ -337,6 +385,77 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
         setCanvasUploaded(false);
     }, [canvasUploaded])
 
+    // every time a new element is drawn, save it to DB
+    useEffect(() => {
+        if(!drawingHistory) return;
+        else {
+            // get all the coordinates of the last drawing and send it to server
+            const startPointOfLastDraw = drawingHistory.slice(drawingHistory.length-2, drawingHistory.length-1);
+            const lastPointOfLastDraw = drawingHistory.slice(drawingHistory.length-1, drawingHistory.length);
+            let firstIndex = -1;
+            let lastIndex = -1;
+
+            for(let i=0; i < drawings.length; i++) {
+                if(drawings[i].x1 === startPointOfLastDraw[0].x && drawings[i].y1 === startPointOfLastDraw[0].y) {
+                    firstIndex = i;
+                }
+
+                if(Math.abs(drawings[i].x1 - lastPointOfLastDraw[0].x)  < 8 && Math.abs(drawings[i].y1 - lastPointOfLastDraw[0].y) < 8) {
+                    lastIndex = i;
+                }
+            }
+
+            // the new drawings array
+            const newDrawings = [];
+
+            // if firstIndex and lastIndex are different than -1, it means that there was a last object drawn
+            // so we will iterate over the current drawings array and save the elements of the array with indexes
+            // between firstIndex and lastIndex
+            for(let i=0; i<drawings.length; i++) 
+                if(firstIndex >= 0 && lastIndex >= 0) 
+                    if(i > firstIndex && i < lastIndex) 
+                        newDrawings.push(drawings[i]); 
+
+            if(newDrawings.length)   
+                saveDrawing(roomId, newDrawings);
+
+            /* 
+            {
+                "line": [
+                    {
+                        "x0":"892",
+                        "y0":"459",
+                        "x1":"893",
+                        "y1":"458",
+                        "color":"#fff",
+                        "username":"costin",
+                        "lineWidth":"3",
+                        "instrument":"pencil"
+                    }
+                ]
+            }
+            */
+
+            /* 
+                [
+                    {
+                        "line": [
+                            {
+                                "x0": 735,
+                                "y0": 529,
+                                "x1": 737,
+                                "y1": 527,
+                                "color": "#fff",
+                                "userID": null,
+                                "lineWidth": 3,
+                                "instrument": "pencil"
+                            },
+                        ]
+                    }
+                ]
+            */
+        }
+    }, [drawingHistory])
     return (
         <div 
             ref={canvasContainerRef}
