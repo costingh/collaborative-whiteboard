@@ -106,7 +106,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
        if(drawings.length) {
             for (let i = 0; i < drawings.length; i++) {
                 const line = drawings[i];
-                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color);
+                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color, lineWidth, instrument);
             }
         }   
     }
@@ -185,7 +185,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
             sendMessage(drawing);
             
             // draw a line
-            drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle);
+            drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle, lineWidth, instrument);
         }
         if (rightMouseDown) {
             // move the screen
@@ -225,7 +225,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
         redrawCanvas();
     }
 
-    const drawLine = (x0, y0, x1, y1, color) => {
+    const drawLine = (x0, y0, x1, y1, color, lineWidth, instrument) => {
         let context = canvasRef.current.getContext("2d");
         context.beginPath();
         context.moveTo(x0, y0);
@@ -245,7 +245,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
         // If this client sent the last drawing coordinates to server, do not redraw them
         // Else if this client hasn't sent last drawing coordinates to server, draw the received coordinates
         if(!incomingDrawings || incomingDrawings.username === username) return;
-        drawLine(toScreenX(incomingDrawings.x0), toScreenY(incomingDrawings.y0), toScreenX(incomingDrawings.x1), toScreenY(incomingDrawings.y1), incomingDrawings.color);
+        drawLine(toScreenX(incomingDrawings.x0), toScreenY(incomingDrawings.y0), toScreenX(incomingDrawings.x1), toScreenY(incomingDrawings.y1), incomingDrawings.color, incomingDrawings.lineWidth, incomingDrawings.instrument);
     }, [incomingDrawings])
 
     const undo = () => {    
@@ -295,7 +295,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
         if(newDrawings.length) {
             for (let i = 0; i < newDrawings.length; i++) {
                 const line = newDrawings[i];
-                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color);
+                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color, lineWidth, instrument);
             }
         } else {
             console.log('Canvas empty')
