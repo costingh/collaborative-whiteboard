@@ -13,6 +13,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import { saveAs } from 'file-saver';
 import { saveDrawing } from '../utils/saveDrawing';
 import { getDrawings } from '../utils/getDrawings';
+import Spinner from './Spinner';
 
 function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, username, loading}) {
     // load theme
@@ -452,6 +453,15 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
             ref={canvasContainerRef}
             style={{position: 'relative', zIndex: '1', width: '100vw', height: '100vh'}}
         >
+            {loading &&
+                <div style={{ background: '#15171A', position: 'absolute', zIndex: 99999999, width: '100vw', height: '100vh'}}>
+                    <Spinner
+                        color={'#fff'} 
+                        loading={loading}
+                        connecting={true}
+                    />
+                </div>
+            }
             <ColorPickerBar 
                 setStrokeStyle={setStrokeStyle}
             />

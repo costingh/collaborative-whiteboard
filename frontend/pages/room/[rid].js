@@ -52,35 +52,37 @@ export default function Room() {
 			localStorage.setItem('rid', router.query.rid);
 			localStorage.setItem('username',router.query.username);		
 		} else {
-			ws.current = new SockJS(SOCKET_URL);
-			ws.current.onopen = () => alert("ws opened");
-			ws.current.onclose = () => alert(1000);
+			if(loading) {
+				ws.current = new SockJS(SOCKET_URL);
+				ws.current.onopen = () => alert("ws opened");
+				ws.current.onclose = () => alert(1000);
 
-			stomp.current = Stomp.over(ws.current);
-			stomp.current.reconnect_delay = 5000;
-			stomp.current.connect({}, frame => {
-				const userJoinedRoom = {
-					username: username,
-					payload: CONNECT_USER,
-					roomId: rid
-				} ;
-				stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userJoinedRoom));
+				stomp.current = Stomp.over(ws.current);
+				stomp.current.reconnect_delay = 5000;
+				stomp.current.connect({}, frame => {
+					const userJoinedRoom = {
+						username: username,
+						payload: CONNECT_USER,
+						roomId: rid
+					} ;
+					stomp.current.send(`/app/send/${rid}/user`, {}, JSON.stringify(userJoinedRoom));
 
-				messagesSubscription = stomp.current.subscribe(`/topic/${rid}/user`, roomActions => {
-					const response = JSON.parse(roomActions.body);
-					setSnackbarMsg(response.message);
-					setUsersList(response.users);
-					setSnackbarOpen(true);
+					messagesSubscription = stomp.current.subscribe(`/topic/${rid}/user`, roomActions => {
+						const response = JSON.parse(roomActions.body);
+						setSnackbarMsg(response.message);
+						setUsersList(response.users);
+						setSnackbarOpen(true);
+					});
+
+					canvasSubscription = stomp.current.subscribe(`/topic/${rid}`, coordinates => {
+						setIncomingDrawings(JSON.parse(coordinates.body)) 
+					});
 				});
 
-				canvasSubscription = stomp.current.subscribe(`/topic/${rid}`, coordinates => {
-					setIncomingDrawings(JSON.parse(coordinates.body)) 
-				});
-			});
-
-			return () => {
-				ws.current.close();
-			};
+				return () => {
+					ws.current.close();
+				};
+			}
 		}
 	}, [rid, username]);
 	
