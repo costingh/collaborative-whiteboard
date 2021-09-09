@@ -14,7 +14,7 @@ import { saveAs } from 'file-saver';
 import { saveDrawing } from '../utils/saveDrawing';
 import { getDrawings } from '../utils/getDrawings';
 
-function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, username}) {
+function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, username, loading}) {
     // load theme
     const { theme, toggle, dark } = React.useContext(ThemeContext)
     const [background, setBackground] = useState('#15171A')

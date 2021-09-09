@@ -9,10 +9,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,12 +52,12 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Room> getRoom(@PathVariable String id) {
-        try {
-            Optional<Room> room = roomService.getRoom(id);
-            return room;
-        } catch (HttpClientErrorException.NotFound e){
-            return Optional.empty();
+    public ResponseEntity<Room> getRoom(@PathVariable String id) {
+        Optional<Room> room = roomService.getRoom(id);
+        if (room.isPresent()) {
+            return new ResponseEntity<>(room.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

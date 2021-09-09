@@ -11,8 +11,7 @@ import {ThemeProvider} from "../../context/ThemeContext"
 // sockets
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs';
-// method to generate ramdom strings
-import randomString from 'random-string'
+import { getRoom } from '../../utils/getRoom';
 
 const SOCKET_URL = 'http://localhost:8080/ws-message';
 
@@ -24,6 +23,7 @@ export default function Room() {
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
 	const [usersList, setUsersList] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	const CONNECT_USER = 'CONNECT_USER';
 	const DISCONNECT_USER = 'DISCONNECT_USER';
@@ -34,12 +34,23 @@ export default function Room() {
 	const ws = useRef(null);
 	const stomp = useRef(null);
 
+	useEffect(() => {
+		// check if room exists by id
+		getRoom(router.query.rid)
+			.then((resp) => {
+				setLoading(false)
+			})
+			.catch((err) => {
+				router.push('/');
+			})		
+	}, [])
+
     useEffect(() => {
 		if(!rid || !username) {
 			setRid(router.query.rid)
 			setUsername(router.query.username)
 			localStorage.setItem('rid', router.query.rid);
-			localStorage.setItem('username',router.query.username);
+			localStorage.setItem('username',router.query.username);		
 		} else {
 			ws.current = new SockJS(SOCKET_URL);
 			ws.current.onopen = () => alert("ws opened");
@@ -131,14 +142,15 @@ export default function Room() {
   return (
     <Layout>
       <ThemeProvider>
-        <Canvas
+	  	<Canvas
 			sendMessage={sendMessage}
 			setRoomId={setRoomId}
 			incomingDrawings={incomingDrawings}
 			roomId={rid}
 			usersList={usersList}
 			username={username}
-        />
+			loading={loading}
+		/>
 		<CustomizedSnackbar 
 			open={snackbarOpen} 
 			setShowSnackbar={setSnackbarOpen} 

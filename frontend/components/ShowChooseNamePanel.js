@@ -76,8 +76,6 @@ function ShowChooseNamePanel() {
                     .then((resp) => {
                         setLoading(true);
                         setConnecting(true);
-                        /* openSbackbar('Connecting to ' + resp.name);
-                        setSnackbarSeverity("success"); */
                         router.push(`/room/${roomAddress}?username=${username}`);
                     })
                     .catch((err) => {

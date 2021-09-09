@@ -50,8 +50,9 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
             } else {
                 // User tries to connect to a different room, therefor we should check if the room exists in DB
                 getRoom(roomIdRef.current.value)
-                    .then((resp) => {
-                        setSnackbarMsg('Connected succssfully to: ' + resp.name)
+                    .then(() => {
+                        console.log('here 1')
+                        setSnackbarMsg('Connected succssfully')
                         setRoomId(roomIdRef.current.value);
                         setShowJoinRoomPanel(false);
                         setButton(infoPanelStyles.closeBtnDisabled)
@@ -59,6 +60,7 @@ function BottomRightBar({scale, undo, disabled, setRoomId, roomId}) {
                         setSnackbarSeverity("success");
                     })
                     .catch((err) => {
+                        console.log('here 2')
                         setSnackbarMsg('Room doesn\'t exist')
                         setShowSnackbar(true);
                         setSnackbarSeverity("error");
