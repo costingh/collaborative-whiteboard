@@ -4,7 +4,6 @@ import CustomizedSnackbar from './CustomizedSnackbar';
 import {createRoom} from '../utils/createRoom';
 import { useRouter } from 'next/router'
 import Spinner from './Spinner';
-import { ThemeProvider } from '@material-ui/core';
 
 function ShowChooseNamePanel() {
     const router = useRouter()
@@ -14,14 +13,12 @@ function ShowChooseNamePanel() {
     const [snackbarMsg, setSnackbarMsg] = useState('');
     const [username, setUsername] = useState('')
     const [roomName, setRoomName] = useState('')
-    const [roomDescription, setRoomDescription] = useState('')
     const [roomAddress, setRoomAddress] = useState('')
     const [showCreateRoom, setShowCreateRoom] = useState(true);
     const [loading, setLoading] = useState(false);
     
     const usernameRef = useRef(null);
     const roomNameRef = useRef(null);
-    const roomDescriptionRef = useRef(null);
     const roomAddressRef = useRef(null);
 
     const handleInputChange = (e) => {
@@ -30,10 +27,6 @@ function ShowChooseNamePanel() {
 
     const handleRoomNameChange = (e) => {
         setRoomName(e.target.value)
-    }
-
-    const handleDescriptionChange = (e) => {
-        setRoomDescription(e.target.value)
     }
 
     const handleRoomAddressChange = (e) => {
@@ -62,13 +55,13 @@ function ShowChooseNamePanel() {
             openSbackbar(message);
 
             const participants = [];
-            const room = await createRoom(
+
+            await createRoom(
                 roomName, 
                 '', 
                 participants
             ).then((resp) => {
                     router.push(`/room/${resp.id}?username=${username}`);    
-                    console.log(`/room/${resp.id}?username=${username}`)
             })
             .catch((err) => console.log(err));
         }
@@ -76,6 +69,7 @@ function ShowChooseNamePanel() {
 
     const handleJoinRoom = () => {
         if(button !== styles.closeBtnDisabled && !showCreateRoom) {
+            setLoading(true)
             router.push(`/room/${roomAddressRef.current.value}?username=${usernameRef.current.value}`);
         }
     }

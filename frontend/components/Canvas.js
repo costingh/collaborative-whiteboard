@@ -495,14 +495,14 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
                 &&  <div
                         ref={cursorRef}
                         style={{
-                            width: '20px',
-                            height: '20px',
+                            width: lineWidth,
+                            height: lineWidth,
                             borderRadius: "50%",
                             border: `1px solid ${theme.secondaryColor}`,
                             position: "absolute",
                             zIndex: 999999999,
-                            top: cursorY - 10,
-                            left: cursorX - 10,
+                            top: cursorY - lineWidth/2,
+                            left: cursorX - lineWidth/2,
                             pointerEvents: "none"
                         }}
                     ></div>
