@@ -145,7 +145,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
        if(drawings.length) {
             for (let i = 0; i < drawings.length; i++) {
                 const line = drawings[i];
-                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color, lineWidth, instrument);
+                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color, line.lineWidth, line.instrument);
             }
         }   
     }
@@ -284,7 +284,7 @@ function Canvas({sendMessage, setRoomId, incomingDrawings, roomId, usersList, us
         // If this client sent the last drawing coordinates to server, do not redraw them
         // Else if this client hasn't sent last drawing coordinates to server, draw the received coordinates
         if(!incomingDrawings || incomingDrawings.username === username) return;
-        drawLine(toScreenX(incomingDrawings.x0), toScreenY(incomingDrawings.y0), toScreenX(incomingDrawings.x1), toScreenY(incomingDrawings.y1), incomingDrawings.color, incomingDrawings.lineWidth, incomingDrawings.instrument);
+        else drawLine(toScreenX(incomingDrawings.x0), toScreenY(incomingDrawings.y0), toScreenX(incomingDrawings.x1), toScreenY(incomingDrawings.y1), incomingDrawings.color, incomingDrawings.lineWidth, incomingDrawings.instrument);
     }, [incomingDrawings])
 
     const undo = () => {    
