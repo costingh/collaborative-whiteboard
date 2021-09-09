@@ -8,11 +8,12 @@ const override = css`
   border-color: red;
 `;
 
-function Spinner({color, loading}) {
+function Spinner({color, loading, connecting}) {
   return (
     <div className={styles.spinner}>
-        <div className="sweet-loading">
+        <div className="sweet-loading" className={styles.centerInner}>
             <ClimbingBoxLoader color={color} loading={loading} css={override} size={15} />
+            {connecting && <p className={styles.text}>Loading...</p>}
         </div>
     </div>
   );

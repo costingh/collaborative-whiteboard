@@ -11,3 +11,15 @@
     justify-content: center;
     align-items: center;
 }
+
+.centerInner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .text {
+        color: #fff;
+        font-size: 17px;
+        letter-spacing: 1.5px;
+    }
+}

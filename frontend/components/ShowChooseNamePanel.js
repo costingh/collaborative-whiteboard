@@ -18,7 +18,8 @@ function ShowChooseNamePanel() {
     const [showCreateRoom, setShowCreateRoom] = useState(true);
     const [loading, setLoading] = useState(false);
     const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-    
+    const [connecting, setConnecting] = useState(false);
+
     const usernameRef = useRef(null);
     const roomNameRef = useRef(null);
     const roomAddressRef = useRef(null);
@@ -73,9 +74,10 @@ function ShowChooseNamePanel() {
         if(button !== styles.closeBtnDisabled && !showCreateRoom) {
              getRoom(roomAddress)
                     .then((resp) => {
-                        setLoading(true)
-                        openSbackbar('Connecting to ' + resp.name);
-                        setSnackbarSeverity("success");
+                        setLoading(true);
+                        setConnecting(true);
+                        /* openSbackbar('Connecting to ' + resp.name);
+                        setSnackbarSeverity("success"); */
                         router.push(`/room/${roomAddress}?username=${username}`);
                     })
                     .catch((err) => {
@@ -97,6 +99,7 @@ function ShowChooseNamePanel() {
                 ?   <Spinner
                         color={'#fff'} 
                         loading={loading}
+                        connecting={connecting}
                     />
                 :   <div className={styles.infoPanel}>
                         <div className={styles.inner}>
