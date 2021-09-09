@@ -4,6 +4,7 @@ import CustomizedSnackbar from './CustomizedSnackbar';
 import {createRoom} from '../utils/createRoom';
 import { useRouter } from 'next/router'
 import Spinner from './Spinner';
+import { getRoom } from '../utils/getRoom';
 
 function ShowChooseNamePanel() {
     const router = useRouter()
@@ -16,6 +17,7 @@ function ShowChooseNamePanel() {
     const [roomAddress, setRoomAddress] = useState('')
     const [showCreateRoom, setShowCreateRoom] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState("success");
     
     const usernameRef = useRef(null);
     const roomNameRef = useRef(null);
@@ -69,8 +71,18 @@ function ShowChooseNamePanel() {
 
     const handleJoinRoom = () => {
         if(button !== styles.closeBtnDisabled && !showCreateRoom) {
-            setLoading(true)
-            router.push(`/room/${roomAddressRef.current.value}?username=${usernameRef.current.value}`);
+             getRoom(roomAddress)
+                    .then((resp) => {
+                        setLoading(true)
+                        openSbackbar('Connecting to ' + resp.name);
+                        setSnackbarSeverity("success");
+                        router.push(`/room/${roomAddress}?username=${username}`);
+                    })
+                    .catch((err) => {
+                        openSbackbar('Room doesn\'t exist');
+                        setSnackbarSeverity("error");
+                        setLoading(false)
+                    })
         }
     }
 
@@ -121,7 +133,7 @@ function ShowChooseNamePanel() {
                         </div>
                     </div>
             }
-            <CustomizedSnackbar open={open} setShowSnackbar={setOpen} snackbarMsg={snackbarMsg}/>
+            <CustomizedSnackbar open={open} setShowSnackbar={setOpen} snackbarMsg={snackbarMsg} severity={snackbarSeverity}/>
         </>
 
     )
