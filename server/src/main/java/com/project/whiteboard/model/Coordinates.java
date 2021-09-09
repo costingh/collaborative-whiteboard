@@ -9,7 +9,7 @@ public class Coordinates {
     private Long x1;
     private Long y1;
     private String color;
-    private String userID;
+    private String username;
     private Long lineWidth;
     private String instrument;
 }
