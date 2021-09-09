@@ -2,9 +2,9 @@ import React, {useState, useEffect, useRef} from 'react'
 import styles from '../styles/ShowInfoPanel.module.scss'
 import CustomizedSnackbar from './CustomizedSnackbar';
 import {createRoom} from '../utils/createRoom';
-// method to generate ramdom strings
-import randomString from 'random-string'
 import { useRouter } from 'next/router'
+import Spinner from './Spinner';
+import { ThemeProvider } from '@material-ui/core';
 
 function ShowChooseNamePanel() {
     const router = useRouter()
@@ -17,6 +17,7 @@ function ShowChooseNamePanel() {
     const [roomDescription, setRoomDescription] = useState('')
     const [roomAddress, setRoomAddress] = useState('')
     const [showCreateRoom, setShowCreateRoom] = useState(true);
+    const [loading, setLoading] = useState(false);
     
     const usernameRef = useRef(null);
     const roomNameRef = useRef(null);
@@ -41,36 +42,35 @@ function ShowChooseNamePanel() {
 
     useEffect(() => {
         if(showCreateRoom) {
-            if(username && roomName && roomDescription) setButton(styles.closeBtn)
+            if(username && roomName) setButton(styles.closeBtn)
             else setButton(styles.closeBtnDisabled)
         } else {
             if(username && roomAddress) setButton(styles.closeBtn)
             else setButton(styles.closeBtnDisabled)
         }
-    }, [username, roomName, roomDescription, roomAddress])
+    }, [username, roomName, roomAddress])
 
     const openSbackbar = (msg) => {
         setOpen(true);
         setSnackbarMsg(msg);
     }
 
-    const handleCreateRoom = () => {
+    const handleCreateRoom = async () => {
         if(button !== styles.closeBtnDisabled && showCreateRoom) {
-            const  message = 'User ' + usernameRef.current.value + ' has successfully created room ' + roomNameRef.current.value;
+            setLoading(true)
+            const  message = 'User ' + username + ' has successfully created room ' + roomName;
             openSbackbar(message);
 
             const participants = [];
-            const room = createRoom(
-                roomNameRef.current.value, 
-                roomDescriptionRef.current.value, 
+            const room = await createRoom(
+                roomName, 
+                '', 
                 participants
-            );
-
-            room
-                .then((resp) => {
-                    router.push(`/room/${resp.id}?username=${usernameRef.current.value}`);
-                })
-                .catch((err) => console.log(err))  
+            ).then((resp) => {
+                    router.push(`/room/${resp.id}?username=${username}`);    
+                    console.log(`/room/${resp.id}?username=${username}`)
+            })
+            .catch((err) => console.log(err));
         }
     }
 
@@ -87,49 +87,46 @@ function ShowChooseNamePanel() {
 
     return (
         <>
-            <div className={styles.infoPanel}>
-                <div className={styles.inner}>
-                    <div className={styles.top}>
-                        <div className={styles.paragraph}>
-                            <h1>{showCreateRoom ? 'Create a Room👇' : 'Join Existing Room👇'}</h1>
-                            <p>⌨️</p>
-                        </div>
-                    </div>
-                    <div className={styles.middle}>
-                        <div className={styles.enterUsername}>
-                            <p>Pick a username: 👉 </p>
-                            <input className={styles.input} placeholder="Username" ref={usernameRef} onChange={handleInputChange}/>
-                        </div>
-                        {showCreateRoom
-                            ?   <>
-                                    <div className={styles.enterUsername}>
-                                        <p>Pick a room name: 👉</p>
-                                        <input className={styles.input} placeholder="Room Name" ref={roomNameRef} onChange={handleRoomNameChange}/>
-                                    </div>
-                                    <div className={styles.enterUsername}>
-                                        <textarea className={styles.textarea} placeholder="Description" ref={roomDescriptionRef} onChange={handleDescriptionChange}/>
-                                    </div>
-                                </>
-                            :   <div className={styles.enterUsername}>
-                                    <p>Enter Room Address: 👉</p>
-                                    <input className={styles.input} placeholder="Room Address" ref={roomAddressRef} onChange={handleRoomAddressChange}/>
+            {loading
+                ?   <Spinner
+                        color={'#fff'} 
+                        loading={loading}
+                    />
+                :   <div className={styles.infoPanel}>
+                        <div className={styles.inner}>
+                            <div className={styles.top}>
+                                <div className={styles.tabs}>
+                                    <p style={{borderBottom: showCreateRoom ? '2px solid #333' : 'none'}} onClick={changePanel}>Create a Room</p>
+                                    <p style={{borderBottom: !showCreateRoom ? '2px solid #333' : 'none'}} onClick={changePanel}>Join Existing Room</p>
                                 </div>
-                        }
+                            </div>
+                            <div className={styles.middle}>
+                                <div className={styles.enterUsername}>
+                                    <p>Pick a username: 👉 </p>
+                                    <input className={styles.input} placeholder="Username" ref={usernameRef} onChange={handleInputChange}/>
+                                </div>
+                                {showCreateRoom
+                                    ?   <>
+                                            <div className={styles.enterUsername}>
+                                                <p>Pick a room name: 👉</p>
+                                                <input className={styles.input} placeholder="Room Name" ref={roomNameRef} onChange={handleRoomNameChange}/>
+                                            </div>
+                                        </>
+                                    :   <div className={styles.enterUsername}>
+                                            <p>Enter Room Address: 👉</p>
+                                            <input className={styles.input} placeholder="Room Address" ref={roomAddressRef} onChange={handleRoomAddressChange}/>
+                                        </div>
+                                }
+                            </div>
+                            <div className={styles.bottom}>
+                                {showCreateRoom
+                                    ?   <div className={button} onClick={handleCreateRoom}>Create Room</div>
+                                    :   <div className={button} onClick={handleJoinRoom}>Join Room</div>                      
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div className={styles.bottom}>
-                        {showCreateRoom
-                            ?   <>
-                                    <div className={button} onClick={handleCreateRoom}>Create Room</div>
-                                    <div className={styles.closeBtn} onClick={changePanel}>Join Room</div>
-                                </>
-                            :   <>
-                                    <div className={styles.closeBtn} onClick={changePanel}>Create Room</div>
-                                    <div className={button} onClick={handleJoinRoom}>Join Room</div>
-                                </>                       
-                        }
-                    </div>
-                </div>
-            </div>
+            }
             <CustomizedSnackbar open={open} setShowSnackbar={setOpen} snackbarMsg={snackbarMsg}/>
         </>
 

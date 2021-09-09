@@ -79,6 +79,21 @@
                 flex: .5;
             }
         }
+        .tabs {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            p {
+                margin-left: 10px;
+                margin-right: 10px;
+                cursor: pointer;
+                transition: all .3s ease;
+                &:hover {
+                    color: #444;
+                }
+            }
+        }
         .paragraph {
             width: 100%;
             display: flex;
