@@ -1,1 +1,1 @@
-export default 'https://collaborative-whiteboard-app.herokuapp.com/'
+export default 'https://collaborative-whiteboard-app.herokuapp.com'
