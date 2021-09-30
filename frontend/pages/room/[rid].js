@@ -13,7 +13,8 @@ import SockJS from 'sockjs-client'
 import Stomp from 'stompjs';
 import { getRoom } from '../../utils/getRoom';
 
-const SOCKET_URL = 'http://localhost:8080/ws-message';
+import BASE_URL from '../../utils/baseUrl'
+const SOCKET_URL = BASE_URL + '/ws-message';
 
 export default function Room() {  
 	const router = useRouter()
