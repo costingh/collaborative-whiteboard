@@ -1,1 +1,1 @@
-export BASE_URRL = 'http://collaborative-whiteboard-app.herokuapp.com/'
+export default 'http://collaborative-whiteboard-app.herokuapp.com/'
